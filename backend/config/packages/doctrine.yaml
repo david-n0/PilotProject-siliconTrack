@@ -18,12 +18,24 @@ doctrine:
             Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
         auto_mapping: true
         mappings:
-            App:
-                type: attribute
+            Lot:
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Entity'
-                prefix: 'App\Entity'
-                alias: App
+                type: attribute
+                dir: '%kernel.project_dir%/src/Lot/Domain'
+                prefix: 'App\Lot\Domain'
+                alias: Lot
+            Wafer:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/src/Wafer/Domain'
+                prefix: 'App\Wafer\Domain'
+                alias: Wafer
+            Defect:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/src/Defect/Domain'
+                prefix: 'App\Defect\Domain'
+                alias: Defect
         controller_resolver:
             auto_mapping: false
 
