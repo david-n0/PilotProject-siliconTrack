@@ -28,7 +28,7 @@ export default function LotForm({onLotAdded}) {
             setProduct('');
             setWaferCount('');
 
-            // Obaveštavamo roditeljsku komponentu da osveži listu
+            // Obavestavamo roditeljsku komponentu da osvezi listu
             onLotAdded();
         } catch (err) {
             setError(err.message);
@@ -38,50 +38,67 @@ export default function LotForm({onLotAdded}) {
     };
 
     return (
-        <form onSubmit={handleSubmit}
-              style={{marginBottom: '30px', padding: '15px', border: '1px solid #ccc', borderRadius: '5px'}}>
-            <h3>Kreiraj Novi Lot</h3>
-            {error && <p style={{color: 'red'}}>{error}</p>}
+        <div className="card">
+            <h3 className="card-title">
+                Nova Proizvodna Serija (Lot)
+            </h3>
+            {error && (
+                <div className="alert-error">
+                    {error}
+                </div>
+            )}
+            <form onSubmit={handleSubmit} className="form-grid">
 
-            <div style={{marginBottom: '10px'}}>
-                <label>Broj serije (Lot Number): </label>
-                <input
-                    type="text"
-                    value={lotNumber}
-                    onChange={(e) => setLotNumber(e.target.value)}
-                    required
-                    placeholder="npr. LOT-2026-001"
-                    style={{padding: '8px', width: '100%', maxWidth: '300px', boxSizing: 'border-box'}}
-                />
-            </div>
-
-            <div style={{marginBottom: '10px'}}>
-                <label>Proizvod (Product): </label>
-                <input
-                    type="text"
-                    value={product}
-                    onChange={(e) => setProduct(e.target.value)}
-                    required
-                    placeholder="npr. 100"
-                    style={{padding: '8px', width: '100%', maxWidth: '300px', boxSizing: 'border-box'}}
-                />
-            </div>
-
-            <div style={{marginBottom: '10px'}}>
-                <label>Broj plocica (Wafer Count): </label>
-                <input
-                    type="number"
-                    value={waferCount}
-                    onChange={(e) => setWaferCount(e.target.value)}
-                    required
-                    placeholder="npr. 25"
-                    style={{padding: '8px', width: '100%', maxWidth: '300px', boxSizing: 'border-box'}}
-                />
-            </div>
-
-            <button type="submit" disabled={loading} style={{ padding: '10px 20px', cursor: 'pointer', background: '#007bff', color: '#fff', border: 'none', borderRadius: '4px' }}>
-                {loading ? 'Čuvanje...' : 'Sačuvaj Lot'}
-            </button>
-        </form>
+                <div className="form-group">
+                    <label className="form-label">
+                        Broj Serije (Lot Number)
+                    </label>
+                    <input
+                        type="text"
+                        value={lotNumber}
+                        onChange={(e) => setLotNumber(e.target.value)}
+                        required
+                        placeholder="npr. LOT-2026-001"
+                        className="input-control"
+                    />
+                </div>
+                <div className="form-group">
+                    <label className="form-label">
+                        Proizvod (Product)
+                    </label>
+                    <input
+                        type="text"
+                        value={product}
+                        onChange={(e) => setProduct(e.target.value)}
+                        required
+                        placeholder="npr. STM32-ARM-CORTEX"
+                        className="input-control"
+                    />
+                </div>
+                <div className="form-group">
+                    <label className="form-label">
+                        Broj Pločica (Wafer Count)
+                    </label>
+                    <input
+                        type="number"
+                        value={waferCount}
+                        onChange={(e) => setWaferCount(e.target.value)}
+                        required
+                        min="1"
+                        placeholder="npr. 25"
+                        className="input-control"
+                    />
+                </div>
+                <div>
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="btn btn-primary"
+                    >
+                        {loading ? 'Čuvanje...' : 'Sačuvaj Seriju'}
+                    </button>
+                </div>
+            </form>
+        </div>
     );
 }

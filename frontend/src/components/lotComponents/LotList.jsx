@@ -1,6 +1,8 @@
 import {lotService} from "../../services/lotService.js";
+import {useNavigate} from "react-router-dom";
 
 export default function LotList({lots, onLotDeleted}) {
+    const navigate = useNavigate();
 
     const handleDelete = async (id) => {
         if (window.confirm('Da li ste sigurni da želite obrisati ovaj Lot?')) {
@@ -13,65 +15,56 @@ export default function LotList({lots, onLotDeleted}) {
         }
     };
 
-    // Pomocna funkcija za lepsu boju status taga
-    const getStatusBadge = (status) => {
-        const colors = {
-            pending: '#ffc107',
-            in_production: '#17a2b8',
-            completed: '#28a745',
-            rejected: '#dc3545',
-        };
-        return (
-            <span style={{
-                background: colors[status] || '#6c757d',
-                color: '#fff',
-                padding: '3px 8px',
-                borderRadius: '12px',
-                fontSize: '0.85em',
-                textTransform: 'uppercase'
-            }}>
-                {status}
-            </span>
-        );
-    };
-
     return (
-        <table border="1" cellPadding="10" style={{borderCollapse: 'collapse', width: '100%', marginTop: '10px'}}>
-            <thead>
-            <tr style={{backgroundColor: '#f4f4f4', textAlign: 'left'}}>
-                <th>ID</th>
-                <th>Broj Serije</th>
-                <th>Proizvod</th>
-                <th>Pločica (Wafers)</th>
-                <th>Status</th>
-                <th>Pokrenuto</th>
-                <th>Akcija</th>
-            </tr>
-            </thead>
-            <tbody>
-            {lots.length > 0 ? (
-                lots.map((lot) => (
-                    <tr key={lot.id}>
-                        <td>{lot.id}</td>
-                        <td><strong>{lot.lotNumber}</strong></td>
-                        <td>{lot.product}</td>
-                        <td>{lot.waferCount}</td>
-                        <td>{getStatusBadge(lot.status)}</td>
-                        <td>{lot.startAt}</td>
-                        <td>
-                            <button onClick={() => handleDelete(lot.id)} style={{color: 'red', cursor: 'pointer'}}>
-                                Obriši
-                            </button>
-                        </td>
-                    </tr>
-                ))
-            ) : (
-
+        <div className="table-responsive">
+            <table className="table-custom">
+                <thead>
                 <tr>
-                    <td colSpan="7" style={{textAlign: 'center', color: '#666'}}>Nema kreiranih serija.</td>
+                    <th>ID</th>
+                    <th>Broj Serije</th>
+                    <th>Proizvod</th>
+                    <th>Pločica (Wafers)</th>
+                    <th>Status</th>
+                    <th>Pokrenuto</th>
+                    <th>Akcija</th>
                 </tr>
-            )}
-            </tbody>
-        </table>
-    )
+                </thead>
+                <tbody>
+                {lots.length > 0 ? (
+                    lots.map((lot) => (
+                        <tr key={lot.id} className="row-item">
+                            <td style={{fontWeight: '600', color: '#94a3b8'}}>#{lot.id}</td>
+                            <td style={{fontWeight: '700', color: '#0f294a'}}>{lot.lotNumber}</td>
+                            <td>{lot.product}</td>
+                            <td><span className="tag-lot">{lot.waferCount} komada</span></td>
+                            <td>
+                                <span className={`badge badge-${lot.status}`}>
+                                    {lot.status.replace('_', ' ').toUpperCase()}
+                                </span>
+                            </td>
+                            <td style={{color: '#64748b',}}>{lot.startedAt}</td>
+
+                            <td style={{textAlign: 'right'}}>
+                                <button onClick={() => navigate('/wafers')} className="btn btn-secondary"
+                                        style={{marginRight: '8px'}}>
+                                    Pločice
+                                </button>
+                                <button onClick={() => handleDelete(lot.id)} className="btn btn-danger">
+                                    Obriši
+                                </button>
+                            </td>
+
+                        </tr>
+                    ))
+                ) : (
+
+                    <tr>
+                        <td colSpan="7" style={{textAlign: 'center'}}>Nema kreiranih serija.</td>
+                    </tr>
+                )}
+                </tbody>
+            </table>
+
+        </div>
+    );
 }
