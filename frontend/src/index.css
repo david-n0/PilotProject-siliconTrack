@@ -161,6 +161,7 @@ body {
 .form-group {
   display: flex;
   flex-direction: column;
+  align-content: baseline;
 }
 
 .form-label {

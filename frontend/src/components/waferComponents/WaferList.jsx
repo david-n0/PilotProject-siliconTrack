@@ -1,6 +1,9 @@
 import {waferService} from '../../services/waferService.js';
+import {useNavigate} from 'react-router-dom';
 
 export default function WaferList({wafers, onRefresh}) {
+    const navigate = useNavigate();
+
     const handleStatusChange = async (id, newStatus) => {
         try {
             await waferService.updateStatus(id, newStatus);
@@ -58,6 +61,13 @@ export default function WaferList({wafers, onRefresh}) {
                             </select>
                         </td>
                         <td style={{textAlign: 'right'}}>
+                            <button
+                                onClick={() => navigate(`/wafers/${w.id}`)}
+                                className="btn btn-secondary"
+                                style={{marginRight: '8px'}}
+                            >
+                                Detalji
+                            </button>
                             <button onClick={() => handleDelete(w.id)} className="btn btn-danger">
                                 Obriši
                             </button>
