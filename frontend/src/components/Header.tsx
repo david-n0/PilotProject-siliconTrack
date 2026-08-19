@@ -186,6 +186,17 @@ export const Header: React.FC<HeaderProps> = ({
                       {usr.id === currentUser.id && <CheckCircle className="w-3.5 h-3.5 text-cyan-400" />}
                     </button>
                   ))}
+                  <div className="border-t border-slate-800 mt-1 pt-1">
+                    <button
+                      onClick={() => {
+                        import('../../lib/firebase').then(m => m.logout());
+                        setShowRoleMenu(false);
+                      }}
+                      className="w-full text-left px-2.5 py-1.5 rounded text-xs text-rose-400 hover:bg-slate-800 transition flex items-center justify-between font-medium"
+                    >
+                      Sign Out (Google)
+                    </button>
+                  </div>
                 </div>
               </div>
             )}

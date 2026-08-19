@@ -33,10 +33,28 @@ import {
 } from './data/seedData';
 import { User, Lot, HoldRecord, NonconformanceRecord } from './types';
 
+import { INITIAL_USERS, INITIAL_LOTS, INITIAL_HOLDS, INITIAL_NCRS, INITIAL_CAPAS, INITIAL_SPC_SIGNALS, INITIAL_SPC_POINTS, INITIAL_INTEGRATION_MESSAGES, INITIAL_AUDIT_LOGS, INITIAL_KPIS, INITIAL_EQUIPMENT, INITIAL_SPECIFICATIONS } from './data/seedData';
+import { User, Lot, HoldRecord, NonconformanceRecord } from './types';
+import { useEffect } from 'react';
+import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+import { auth } from './lib/firebase';
+import { LoginView } from './components/views/LoginView';
+
 export default function App() {
+  const [authUser, setAuthUser] = useState<FirebaseUser | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
   const [currentUser, setCurrentUser] = useState<User>(INITIAL_USERS[0]); // Dr. Elena Vance (QA Manager)
   const [selectedSite, setSelectedSite] = useState<string>('Fab 1 - Dresden');
   const [activeTab, setActiveTab] = useState<TabType>('overview');
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setAuthUser(user);
+      setAuthLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const [lots, setLots] = useState<Lot[]>(INITIAL_LOTS);
   const [holds, setHolds] = useState<HoldRecord[]>(INITIAL_HOLDS);
@@ -103,6 +121,21 @@ export default function App() {
 
   const activeHoldsCount = holds.filter((h) => h.status === 'Active' || h.status === 'Under Investigation').length;
   const activeSignalsCount = INITIAL_SPC_SIGNALS.filter((s) => s.status === 'Active').length;
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="text-cyan-400 font-mono flex items-center gap-2">
+          <div className="w-5 h-5 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+          Authenticating...
+        </div>
+      </div>
+    );
+  }
+
+  if (!authUser) {
+    return <LoginView onLoginSuccess={setAuthUser} />;
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans flex flex-col antialiased selection:bg-cyan-500 selection:text-slate-950">
