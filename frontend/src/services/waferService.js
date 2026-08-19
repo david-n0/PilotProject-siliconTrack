@@ -1,28 +1,29 @@
+import {apiFetch} from "./apiClient.js";
+
 const API_BASE_URL = '/api';
 
 export const waferService = {
 
-    // Dohvata sve pločice (ili filtrirano po lotId ako se prosledi)
+    // Dohvata sve plocice (ili filtrirano po lotId ako se prosledi)
 
     async getAll(lotId = null) {
         const url = lotId ? `${API_BASE_URL}/wafers?lotId=${lotId}` : `${API_BASE_URL}/wafers`;
-        const res = await fetch(url);
+        const res = await apiFetch(url);
         if (!res.ok) throw new Error('Neuspešno dohvatanje pločica');
         return res.json();
     },
 
-    // Dohvata sve pločice za određeni Lot
+    // Dohvata sve plocice za određeni Lot
     async getByLot(lotId) {
-        const res = await fetch(`${API_BASE_URL}/lots/${lotId}/wafers`);
+        const res = await apiFetch(`${API_BASE_URL}/lots/${lotId}/wafers`);
         if (!res.ok) throw new Error(`Neuspešno dohvatanje pločica za Lot #${lotId}`);
         return res.json();
     },
 
-    // Kreira novu pločicu
+    // Kreira novu plocicu
     async create(data) {
-        const res = await fetch(`${API_BASE_URL}/wafers`, {
+        const res = await apiFetch(`${API_BASE_URL}/wafers`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         });
         const json = await res.json();
@@ -30,11 +31,10 @@ export const waferService = {
         return json;
     },
 
-    // Menja status pločice ('ok' | 'defective' | 'scrapped')
+    // Menja status plocice ('ok' | 'defective' | 'scrapped')
     async updateStatus(id, status) {
-        const res = await fetch(`${API_BASE_URL}/wafers/${id}/status`, {
+        const res = await apiFetch(`${API_BASE_URL}/wafers/${id}/status`, {
             method: 'PATCH',
-            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({status})
         });
         const json = await res.json();
@@ -42,9 +42,9 @@ export const waferService = {
         return json;
     },
 
-    // Briše pločicu
+    // Brise plocicu
     async delete(id) {
-        const res = await fetch(`${API_BASE_URL}/wafers/${id}`, {
+        const res = await apiFetch(`${API_BASE_URL}/wafers/${id}`, {
             method: 'DELETE'
         });
         if (!res.ok) throw new Error('Neuspešno brisanje pločice');

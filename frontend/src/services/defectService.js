@@ -1,26 +1,27 @@
+import {apiFetch} from "./apiClient.js";
+
 const API_BASE_URL = '/api';
 
 export const defectService = {
 
     // Svi defekti u sistemu
     async getAll() {
-        const res = await fetch(`${API_BASE_URL}/defects`);
+        const res = await apiFetch(`${API_BASE_URL}/defects`);
         if (!res.ok) throw new Error('Neuspešno dohvatanje defekata');
         return res.json();
     },
 
     // Defekti za konkretnu plocicu (Wafer)
     async getByWafer(waferId) {
-        const res = await fetch(`${API_BASE_URL}/wafers/${waferId}/defects`);
+        const res = await apiFetch(`${API_BASE_URL}/wafers/${waferId}/defects`);
         if (!res.ok) throw new Error(`Greška pri dohvatanju defekata za pločicu #${waferId}`);
         return res.json();
     },
 
     // Prijava novog defekta
     async log(data) {
-        const res = await fetch(`${API_BASE_URL}/defects`, {
+        const res = await apiFetch(`${API_BASE_URL}/defects`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         });
         const json = await res.json();
@@ -30,7 +31,7 @@ export const defectService = {
 
     // Brisanje defekta
     async delete(id) {
-        const res = await fetch(`${API_BASE_URL}/defects/${id}`, {
+        const res = await apiFetch(`${API_BASE_URL}/defects/${id}`, {
             method: 'DELETE'
         });
         if (!res.ok) throw new Error('Neuspešno brisanje defekta');

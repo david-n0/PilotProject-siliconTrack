@@ -4,23 +4,36 @@ import WafersPage from "./pages/WafersPage.jsx";
 import LotsPage from "./pages/LotsPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import WaferDetailPage from "./pages/WaferDetailPage.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
+import {AuthProvider} from "./context/AuthContext.jsx";
 
 export default function App() {
     return (
-        <BrowserRouter>
-            <div className="app-container">
-                <div className="content-wrapper">
-                    <Navbar/>
+        // AuthProvider omota SVE — sva strana aplikacije ima pristup useAuth()
+        <AuthProvider>
+            <BrowserRouter>
+                <div className="app-container">
+                    <div className="content-wrapper">
 
-                    <Routes>
-                        <Route path="/" element={<DashboardPage/>}/>
-                        <Route path="/lots" element={<LotsPage/>}/>
-                        <Route path="/wafers" element={<WafersPage/>}/>
-                        <Route path="/wafers/:id" element={<WaferDetailPage />} />
-                    </Routes>
 
+                            <Navbar/>
+                        <Routes>
+                            {/* Javne rute — bez tokena dostupne */}
+                            <Route path="/login" element={<LoginPage/>}/>
+                            <Route path="/register" element={<RegisterPage/>}/>
+
+                            {/* Zaštićene rute — PrivateRoute provjeri token */}
+                            <Route path="/" element={<PrivateRoute><DashboardPage/></PrivateRoute>}/>
+                            <Route path="/lots" element={<PrivateRoute><LotsPage/></PrivateRoute>}/>
+                            <Route path="/wafers" element={<PrivateRoute><WafersPage/></PrivateRoute>}/>
+                            <Route path="/wafers/:id" element={<PrivateRoute><WaferDetailPage/></PrivateRoute>}/>
+                        </Routes>
+
+                    </div>
                 </div>
-            </div>
-        </BrowserRouter>
+            </BrowserRouter>
+        </AuthProvider>
     );
 }

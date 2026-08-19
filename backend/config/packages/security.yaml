@@ -1,0 +1,37 @@
+security:
+    # Koji algoritam se koristi za hashiranje lozinki
+    password_hashers:
+        App\User\Domain\User:
+            algorithm: bcrypt
+
+    # Symfony zna gde da traži korisnike (u bazi, po email-u)
+    providers:
+        app_user_provider:
+            entity:
+                class: App\User\Domain\User
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        api:
+            pattern: ^/api
+            stateless: true
+            jwt: ~
+
+    # Kontrola pristupa po rutama
+    access_control:
+        - { path: ^/api/login,    roles: PUBLIC_ACCESS }
+        - { path: ^/api/register, roles: PUBLIC_ACCESS }
+        # DELETE rute mogu pozvati SAMO administratori:
+        - { path: ^/api/lots/\d+$,    methods: [ DELETE ], roles: ROLE_ADMIN }
+        - { path: ^/api/wafers/\d+$,  methods: [ DELETE ], roles: ROLE_ADMIN }
+        - { path: ^/api/defects/\d+$, methods: [ DELETE ], roles: ROLE_ADMIN }
+        # Kreiranje i izmene mogu raditi Inzenjeri i Admini:
+        - { path: ^/api/lots,    methods: [ POST ], roles: ROLE_ENGINEER }
+        - { path: ^/api/wafers,  methods: [ POST, PATCH ], roles: ROLE_ENGINEER }
+        - { path: ^/api/defects, methods: [ POST ], roles: ROLE_ENGINEER }
+        # Citanje (GET) mogu svi ulogovani korisnici (ukljucujuci ROLE_VIEWER):
+        - { path: ^/api, roles: ROLE_USER }

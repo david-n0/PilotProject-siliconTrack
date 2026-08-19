@@ -40,19 +40,24 @@ body {
   font-size: 14px;
 }
 
-/* Navigacija */
-.navbar {
+/* ================= Navigacija (Dvostruki bar) ================= */
+.nav-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+/* 1. Gornji Bar */
+.navbar-top {
   background: #ffffff;
-  padding: 14px 24px;
-  border-radius: 20px;
-  margin-bottom: 30px;
+  padding: 12px 24px;
+  border-radius: 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 4px 20px rgba(186, 230, 253, 0.4);
   border: 1px solid #e0f2fe;
 }
-
 .navbar-brand {
   display: flex;
   align-items: center;
@@ -60,26 +65,67 @@ body {
   font-weight: 800;
   font-size: 18px;
   color: #0f294a;
+  letter-spacing: -0.3px;
 }
 
-.navbar-links {
+.navbar-user-section {
   display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.user-profile-info {
+  display: flex;
+  align-items: center;
   gap: 8px;
 }
-
-.nav-link {
-  padding: 8px 16px;
-  border-radius: 12px;
-  text-decoration: none;
-  font-weight: 600;
+.user-name {
   font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+}
+.user-role-tag {
+  background: #e0f2fe;
   color: #0369a1;
-  transition: all 0.2s;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
 }
 
-.nav-link.active {
+/* 2. Donji Bar (Tabovi) */
+.navbar-sub {
+  background: #ffffff;
+  padding: 6px 10px;
+  border-radius: 14px;
+  display: flex;
+  gap: 8px;
+  width: fit-content;
+  box-shadow: 0 2px 12px rgba(186, 230, 253, 0.3);
+  border: 1px solid #e0f2fe;
+}
+.subnav-link {
+  padding: 8px 18px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: #0369a1;
+  transition: all 0.2s ease;
+}
+.subnav-link:hover {
+  background: #f0f9ff;
+  color: #0284c7;
+}
+.subnav-link.active {
   background: #0284c7;
   color: #ffffff;
+  box-shadow: 0 3px 10px rgba(2, 132, 199, 0.35);
 }
 
 /* Kartice */
@@ -224,11 +270,15 @@ body {
 .btn-secondary {
   background: #e0f2fe;
   color: #0369a1;
+  padding: 11px 20px;
+  border-radius: 12px;
 }
 
 .btn-danger {
   background: #fee2e2;
   color: #ef4444;
+  padding: 11px 20px;
+  border-radius: 12px;
 }
 
 /* Tabele */

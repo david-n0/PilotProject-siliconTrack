@@ -1,5 +1,6 @@
 import {waferService} from '../../services/waferService.js';
 import {useNavigate} from 'react-router-dom';
+import {useAuth} from "../../context/AuthContext.jsx";
 
 export default function WaferList({wafers, onRefresh}) {
     const navigate = useNavigate();
@@ -28,6 +29,11 @@ export default function WaferList({wafers, onRefresh}) {
         return <div className="empty-state">Trenutno nema unetih pločica.</div>;
     }
 
+    // Provere rola
+    const {user} = useAuth();
+    const isAdmin = user?.roles?.includes('ROLE_ADMIN');
+    const canEdit = isAdmin || user?.roles?.includes('ROLE_ENGINEER');
+
     return (
         <div className="table-responsive">
             <table className="table-custom">
@@ -49,6 +55,8 @@ export default function WaferList({wafers, onRefresh}) {
                         <td><span className="tag-lot">{w.lotNumber}</span></td>
                         <td>Slot #{w.position}</td>
                         <td>
+                            {canEdit ? (
+                                /* Inženjer i Admin mogu menjati status kroz dropdown */
                             <select
                                 value={w.status}
                                 onChange={(e) => handleStatusChange(w.id, e.target.value)}
@@ -58,7 +66,12 @@ export default function WaferList({wafers, onRefresh}) {
                                 <option value="ok">OK</option>
                                 <option value="defective">DEFECTIVE</option>
                                 <option value="scrapped">SCRAPPED</option>
-                            </select>
+                            </select>):(
+                                /* Viewer samo gleda status */
+                                <span className={`badge badge-${w.status}`}>
+                                        {w.status.toUpperCase()}
+                                    </span>
+                            )}
                         </td>
                         <td style={{textAlign: 'right'}}>
                             <button
@@ -68,9 +81,10 @@ export default function WaferList({wafers, onRefresh}) {
                             >
                                 Detalji
                             </button>
-                            <button onClick={() => handleDelete(w.id)} className="btn btn-danger">
+                            {/* Samo Admin ima pravo na brisanje */}
+                            {isAdmin && (<button onClick={() => handleDelete(w.id)} className="btn btn-danger">
                                 Obriši
-                            </button>
+                            </button>)}
                         </td>
                     </tr>
                 ))}

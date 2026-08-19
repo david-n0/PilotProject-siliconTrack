@@ -4,6 +4,7 @@ import { waferService } from '../services/waferService.js';
 import { defectService } from '../services/defectService.js';
 import DefectForm from '../components/defectComponents/DefectForm.jsx';
 import DefectList from '../components/defectComponents/DefectList.jsx';
+import {useAuth} from "../context/AuthContext.jsx";
 
 export default function WaferDetailPage() {
     const { id } = useParams();   // grabs :id from the URL /wafers/3
@@ -34,6 +35,9 @@ export default function WaferDetailPage() {
     if (loading) return <div className="card">Loading...</div>;
     if (!wafer)  return <div className="card">Wafer not found.</div>;
 
+    const { user } = useAuth();
+    const canEdit = user?.roles?.includes('ROLE_ADMIN') || user?.roles?.includes('ROLE_ENGINEER');
+
     return (
         <div>
             {/* Header */}
@@ -51,8 +55,10 @@ export default function WaferDetailPage() {
             </div>
 
             {/* Defect Form — logs a new defect */}
-            <DefectForm waferId={parseInt(id)} onDefectLogged={loadData} />
-
+            {/* Forma za prijavljivanje defekta - samo za Admina i Inzenjera */}
+            {canEdit && (
+                <DefectForm waferId={parseInt(id)} onDefectLogged={loadData} />
+            )}
             {/* Defect List — shows all defects for this wafer */}
             <div className="card" style={{ marginTop: '20px' }}>
                 <h2 className="card-title">Istorija defekata ({defects.length})</h2>

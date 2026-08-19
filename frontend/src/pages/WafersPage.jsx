@@ -3,6 +3,7 @@ import {waferService} from '../services/waferService';
 import {lotService} from '../services/lotService';
 import WaferForm from '../components/waferComponents/WaferForm';
 import WaferList from '../components/waferComponents/WaferList';
+import {useAuth} from "../context/AuthContext.jsx";
 
 export default function WafersPage() {
     const [wafers, setWafers] = useState([]);
@@ -28,10 +29,13 @@ export default function WafersPage() {
         loadData();
     }, []);
 
+    const { user } = useAuth();
+    const canEdit = user?.roles?.includes('ROLE_ADMIN') || user?.roles?.includes('ROLE_ENGINEER');
+
     return (
         <div>
             {/* Forma za dodavanje */}
-            <WaferForm lots={lots} onWaferAdded={loadData}/>
+            {canEdit &&  <WaferForm lots={lots} onWaferAdded={loadData}/>}
 
             {/* Tabela svih pločica */}
             <div className="card">

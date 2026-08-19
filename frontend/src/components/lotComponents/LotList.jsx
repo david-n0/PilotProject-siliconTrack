@@ -1,5 +1,6 @@
 import {lotService} from "../../services/lotService.js";
 import {useNavigate} from "react-router-dom";
+import {useAuth} from "../../context/AuthContext.jsx";
 
 export default function LotList({lots, onLotDeleted}) {
     const navigate = useNavigate();
@@ -14,6 +15,9 @@ export default function LotList({lots, onLotDeleted}) {
             }
         }
     };
+
+    const { user } = useAuth();
+    const isAdmin = user?.roles?.includes('ROLE_ADMIN');
 
     return (
         <div className="table-responsive">
@@ -49,9 +53,10 @@ export default function LotList({lots, onLotDeleted}) {
                                         style={{marginRight: '8px'}}>
                                     Pločice
                                 </button>
-                                <button onClick={() => handleDelete(lot.id)} className="btn btn-danger">
+
+                                {isAdmin && (<button onClick={() => handleDelete(lot.id)} className="btn btn-danger">
                                     Obriši
-                                </button>
+                                </button>)}
                             </td>
 
                         </tr>
