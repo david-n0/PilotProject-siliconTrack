@@ -189,7 +189,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <div className="border-t border-slate-800 mt-1 pt-1">
                     <button
                       onClick={() => {
-                        import('../../lib/firebase').then(m => m.logout());
+                        import('../lib/firebase').then(m => m.logout());
                         setShowRoleMenu(false);
                       }}
                       className="w-full text-left px-2.5 py-1.5 rounded text-xs text-rose-400 hover:bg-slate-800 transition flex items-center justify-between font-medium"
