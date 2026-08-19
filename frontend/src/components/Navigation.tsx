@@ -51,8 +51,8 @@ export const Navigation: React.FC<NavigationProps> = ({
   ];
 
   return (
-    <nav className="bg-slate-900 border-b border-slate-800 text-slate-300 px-4 overflow-x-auto scrollbar-none">
-      <div className="max-w-7xl mx-auto flex items-center gap-1 py-1">
+    <nav className="bg-slate-900 border-b border-slate-800 text-slate-300 px-4">
+      <div className="max-w-7xl mx-auto flex flex-wrap items-center gap-x-1 gap-y-2 py-2">
         {tabs.map((t) => {
           const Icon = t.icon;
           const isActive = activeTab === t.id;
@@ -60,7 +60,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             <button
               key={t.id}
               onClick={() => onSelectTab(t.id)}
-              className={`flex items-center gap-2 px-3 py-2 rounded-md text-xs font-medium whitespace-nowrap transition-all ${
+              className={`flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-md text-xs font-medium whitespace-nowrap transition-all ${
                 isActive
                   ? 'bg-cyan-950/80 text-cyan-300 border border-cyan-800/80 shadow-sm font-semibold'
                   : 'hover:bg-slate-800/60 hover:text-slate-100 text-slate-400'
