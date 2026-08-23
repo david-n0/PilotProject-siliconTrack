@@ -1,0 +1,50 @@
+name: Deploy Backend to Google Cloud Run
+
+on:
+  push:
+    branches:
+      - master  # Pokreće se automatski na svaki push na master
+      - main
+  workflow_dispatch: # Dodaje dugme "Run workflow" na GitHub-u
+
+jobs:
+  deploy:
+    name: Build & Deploy Symfony to Cloud Run
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Preuzmi tvoj kod
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Prijavi se na Google Cloud preko JSON ključa iz Secrets
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      # 3. Podesi Google Cloud alate
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      # 4. Autorizuj Docker za europe-west1 Artifact Registry
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker europe-west1-docker.pkg.dev --quiet
+
+      # 5. Spakuj Symfony i pošalji na Artifact Registry
+      - name: Build and Push Docker Image
+        run: |
+           IMAGE_NAME="europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/silicontrack-backend/silicontrack-backend-david:${{ github.sha }}"
+            docker build -t $IMAGE_NAME ./backend
+            docker push $IMAGE_NAME
+
+      # 6. Pokreni Cloud Run servis
+      - name: Deploy to Cloud Run
+        run: |
+           IMAGE_NAME="europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/silicontrack-backend/silicontrack-backend-david:${{ github.sha }}"
+           gcloud run deploy silicontrack-backend-david \
+            --image $IMAGE_NAME \
+            --platform managed \
+            --region europe-west1 \
+            --allow-unauthenticated \
+            --set-env-vars "APP_ENV=prod,APP_SECRET=${{ secrets.APP_SECRET }},DATABASE_URL=${{ secrets.DATABASE_URL }},JWT_PASSPHRASE=f76015fb15eb11d46c94c951567293d0e7606a05d5b835e1e9eea1f2dc0c358a,JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem,JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem"
