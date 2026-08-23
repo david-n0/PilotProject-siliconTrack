@@ -4,6 +4,12 @@ security:
         App\User\Domain\User:
             algorithm: bcrypt
 
+    # Hijerarhija uloga (Admin ima sva prava Inzenjera, Inzenjer ima sva prava Viewera)
+    role_hierarchy:
+        ROLE_ADMIN: [ ROLE_ENGINEER ]
+        ROLE_ENGINEER: [ ROLE_VIEWER, ROLE_USER ]
+        ROLE_VIEWER: [ ROLE_USER ]
+
     # Symfony zna gde da traži korisnike (u bazi, po email-u)
     providers:
         app_user_provider:
