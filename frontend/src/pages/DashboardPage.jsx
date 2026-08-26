@@ -60,12 +60,12 @@ export default function DashboardPage() {
     const okWafers = wafers.filter(w => w.status === 'ok').length;
 
     // Proračun Yield-a
-    const yieldNum = wafers.length > 0 ? (okWafers / wafers.length) * 100 : 0;
-    const globalYield = yieldNum.toFixed(1);
+    const yieldNum = wafers.length > 0 ? (okWafers / wafers.length) * 100 : -1;
+    const globalYield = yieldNum >= 0 ? yieldNum.toFixed(1) : 'N/A';
 
     // Dinamički meta podaci za Yield
     const getYieldMeta = (num, total) => {
-        if (total === 0) {
+        if (total === 0 || num < 0) {
             return {
                 cssClass: 'stat-card-yield-empty',
                 color: '#64748b',
@@ -120,7 +120,6 @@ export default function DashboardPage() {
         fill: BAR_COLORS[type] || BAR_COLORS.other,
     }));
 
-
     return (
         <div>
             <div className="page-header">
@@ -154,23 +153,31 @@ export default function DashboardPage() {
                     <div className="stat-card-value" style={{color: '#dc2626'}}>{loading ? '...' : scrappedWafers}</div>
                     <div className="stat-card-hint">Detalji</div>
                 </div>
+
+                {/* Yield */}
                 <div className={`stat-card stat-card-yield ${yieldMeta.cssClass}`}>
                     <div className="yield-header">
-                        <span className="stat-card-title" style={{ margin: 0, color: yieldMeta.color }}>Globalni Yield</span>
-                        <span className="yield-badge-pill" style={{ background: yieldMeta.bg, color: yieldMeta.color }}>
+                        <span className="stat-card-title"
+                              style={{margin: 0, color: yieldMeta.color}}>Globalni Yield</span>
+                        <span className="yield-badge-pill" style={{background: yieldMeta.bg, color: yieldMeta.color}}>
                             {yieldMeta.label}
                         </span>
                     </div>
-                    <div className="stat-card-value" style={{ color: yieldMeta.color, margin: '6px 0 2px' }}>
+                    <div className="stat-card-value" style={{color: yieldMeta.color, margin: '6px 0 2px'}}>
                         {loading ? '...' : wafers.length > 0 ? `${globalYield}%` : 'N/A'}
                     </div>
                     <div className="yield-progress-track">
                         <div
                             className="yield-progress-fill"
-                            style={{ width: `${Math.min(yieldNum, 100)}%`, backgroundColor: yieldMeta.color }}
+                            style={{width: `${Math.min(yieldNum, 100)}%`, backgroundColor: yieldMeta.color}}
                         />
                     </div>
-                    <span style={{ fontSize: '11px', color: yieldMeta.color, fontWeight: '600', marginTop: '4px' }}>
+                    {wafers.length > 0 && (
+                        <span style={{fontSize: '11px', color: '#64748b', marginTop: '4px'}}>
+                            {okWafers} od {wafers.length} pločica ispravno
+                        </span>
+                    )}
+                    <span style={{fontSize: '11px', color: yieldMeta.color, fontWeight: '600', marginTop: '4px'}}>
                         {yieldMeta.hint}
                     </span>
                 </div>

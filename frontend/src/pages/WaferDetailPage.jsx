@@ -32,7 +32,9 @@ export default function WaferDetailPage() {
 
     };
 
-    useEffect(() => {loadData();}, [id]);
+    useEffect(() => {
+        loadData();
+    }, [id]);
 
     if (loading) return <div className="card">Loading...</div>;
     if (!wafer) return <div className="card">Wafer not found.</div>;
@@ -48,7 +50,7 @@ export default function WaferDetailPage() {
                 </button>
                 <div>
                     <h1 className="page-title">Wafer: {wafer.serialNumber}</h1>
-                    <p className="page-subtitle">Lot: {wafer.lotNumber} · Slot #{wafer.position}</p>
+                    <p className="page-subtitle">Lot: <strong>{wafer.lotNumber}</strong> &bull; Slot #{wafer.position}</p>
                 </div>
                 <span className={`badge badge-${wafer.status}`}>
                     {wafer.status.toUpperCase()}

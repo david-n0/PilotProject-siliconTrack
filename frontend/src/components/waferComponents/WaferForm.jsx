@@ -76,7 +76,7 @@ export default function WaferForm({lots, onWaferAdded}) {
                 </div>
 
                 <div className="form-group">
-                    <label className="form-label">Pozicija (1-25):</label>
+                    <label className="form-label">Pozicija u kaseti (1-25):</label>
                     <input
                         type="number"
                         placeholder="npr. 1"
@@ -84,6 +84,7 @@ export default function WaferForm({lots, onWaferAdded}) {
                         onChange={(e) => setPosition(e.target.value)}
                         required
                         min="1"
+                        max="25"
                         className="input-control"
                     />
                 </div>

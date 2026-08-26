@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { authService } from '../services/authService.js';
+import {useState} from 'react';
+import {useNavigate, Link} from 'react-router-dom';
+import {authService} from '../services/authService.js';
 
 export default function RegisterPage() {
     const navigate = useNavigate();
@@ -9,13 +9,13 @@ export default function RegisterPage() {
         name: '',
         email: '',
         password: '',
-        role: 'ROLE_ENGINEER'
+        role: 'ROLE_VIEWER'
     });
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
-        setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+        setForm(prev => ({...prev, [e.target.name]: e.target.value}));
     };
 
     const handleSubmit = async (e) => {
@@ -34,17 +34,17 @@ export default function RegisterPage() {
     };
 
     return (
-        <div style={{ maxWidth: '420px', margin: '60px auto' }}>
+        <div style={{maxWidth: '420px', margin: '60px auto'}}>
             <div className="card">
-                <h1 className="page-title" style={{ marginBottom: '6px' }}>Create Account</h1>
-                <p className="page-subtitle" style={{ marginBottom: '24px' }}>
+                <h1 className="page-title" style={{marginBottom: '6px'}}>Create Account</h1>
+                <p className="page-subtitle" style={{marginBottom: '24px'}}>
                     Register a new SiliconTrack account
                 </p>
 
                 {error && <div className="alert-error">{error}</div>}
 
                 <form onSubmit={handleSubmit}>
-                    <div className="form-group" style={{ marginBottom: '14px' }}>
+                    <div className="form-group" style={{marginBottom: '14px'}}>
                         <label className="form-label">Full Name</label>
                         <input
                             type="text"
@@ -57,7 +57,7 @@ export default function RegisterPage() {
                         />
                     </div>
 
-                    <div className="form-group" style={{ marginBottom: '14px' }}>
+                    <div className="form-group" style={{marginBottom: '14px'}}>
                         <label className="form-label">Email</label>
                         <input
                             type="email"
@@ -70,7 +70,7 @@ export default function RegisterPage() {
                         />
                     </div>
 
-                    <div className="form-group" style={{ marginBottom: '14px' }}>
+                    <div className="form-group" style={{marginBottom: '14px'}}>
                         <label className="form-label">Password</label>
                         <input
                             type="password"
@@ -83,7 +83,7 @@ export default function RegisterPage() {
                         />
                     </div>
 
-                    <div className="form-group" style={{ marginBottom: '24px' }}>
+                    <div className="form-group" style={{marginBottom: '24px'}}>
                         <label className="form-label">Role</label>
                         <select
                             name="role"
@@ -93,23 +93,22 @@ export default function RegisterPage() {
                         >
                             <option value="ROLE_VIEWER">Viewer (Read Only)</option>
                             <option value="ROLE_ENGINEER">Engineer (Production & QA)</option>
-                            <option value="ROLE_ADMIN">Admin (Full Control)</option>
                         </select>
                     </div>
 
                     <button
                         type="submit"
                         className="btn btn-primary"
-                        style={{ width: '100%' }}
+                        style={{width: '100%'}}
                         disabled={loading}
                     >
                         {loading ? 'Creating account...' : 'Create Account'}
                     </button>
                 </form>
 
-                <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '14px', color: '#64748b' }}>
+                <p style={{textAlign: 'center', marginTop: '20px', fontSize: '14px', color: '#64748b'}}>
                     Already have an account?{' '}
-                    <Link to="/login" style={{ color: '#0284c7', fontWeight: '600' }}>
+                    <Link to="/login" style={{color: '#0284c7', fontWeight: '600'}}>
                         Sign in
                     </Link>
                 </p>

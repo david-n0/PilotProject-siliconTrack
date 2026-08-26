@@ -20,6 +20,10 @@ class LogDefectHandler
 
     public function handle(LogDefectCommand $command): void
     {
+        if (empty(trim($command->description ?? ''))) {
+            throw new \InvalidArgumentException('Opis i lokacija defekta su obavezni.');
+        }
+
         //1. Pronadji plocicu u bazi
         $wafer = $this->waferRepository->findById($command->waferId);
         if ($wafer === null) {
@@ -31,7 +35,7 @@ class LogDefectHandler
         $severity = DefectSeverity::from($command->severity);
 
         //3. Kreiraj defekt koristeci factory medtodu
-        $defect = Defect::log($wafer, $type, $severity, $command->description);
+        $defect = Defect::log($wafer, $type, $severity, trim($command->description));
 
         //4. Automatski promeni status procice u "defective", cim se zabelezi defect. plocica vise nije ok
         $wafer->changeStatus(WaferStatus::Defective);
