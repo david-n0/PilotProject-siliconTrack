@@ -8,4 +8,7 @@ interface LotRepositoryInterface
     public function findAll(): array;
     public function findById(int $id): ?Lot;
     public function existByLotNumber(string $lotNumber): bool;
+
+    public function saveHistory(LotHistory $history): void;
+    public function findHistoryByLotId(int $lotId): array;
 }

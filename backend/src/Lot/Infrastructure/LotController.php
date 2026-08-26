@@ -51,9 +51,8 @@ class LotController extends AbstractController
     }
 
     #[Route('/{id}', methods: ['GET'])]
-    public function showLot(int $id, LotRepositoryInterface $repo): JsonResponse
+    public function getLot(int $id, LotRepositoryInterface $repo): JsonResponse
     {
-
         $lot = $repo->findById($id);
         if (!$lot) {
             return $this->json(['error' => 'Not found by id: {$id}'], Response::HTTP_NOT_FOUND);
@@ -73,11 +72,38 @@ class LotController extends AbstractController
     #[Route('/{id}/status', methods: ['PATCH'])]
     public function updateStatus(int $id, Request $request, UpdateLotStatusHandler $handler): JsonResponse
     {
-
         $body = json_decode($request->getContent(), true);
-        $handler->handle(new UpdateLotStatusCommand($id, $body['status'] ?? ''));
 
-        return $this->json(['message' => 'Status updated']);
+        $currentUser = $this->getUser();
+        try {
+            $handler->handle(new UpdateLotStatusCommand(
+                lotId: $id,
+                newStatus: $body['status'] ?? '',
+                changedByEmail: $currentUser?->getUserIdentifier() ?? 'system',
+                note: $body['note'] ?? null,
+            ));
+            return $this->json(['message' => 'Status updated successfully.']);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        } catch (\ValueError $e) {
+            return $this->json(['error' => 'Invalid status value.'], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    // GET /api/lots/{id}/history — dohvati sve revizorske zapise za ovaj Lot
+    #[Route('/{id}/history', methods: ['GET'])]
+    public function history(int $id, LotRepositoryInterface $repo): JsonResponse
+    {
+        $entries = $repo->findHistoryByLotId($id);
+        $data = array_map(fn($h) => [
+            'id' => $h->getId(),
+            'fromStatus' => $h->getFromStatus(),
+            'toStatus' => $h->getToStatus(),
+            'changedByEmail' => $h->getChangedByEmail(),
+            'changedAt' => $h->getChangedAt()->format('H:i d-m-Y'),
+            'note' => $h->getNote(),
+        ], $entries);
+        return $this->json($data);
     }
 
     #[Route('/{id}', methods: ['DELETE'])]

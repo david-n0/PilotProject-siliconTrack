@@ -8,6 +8,7 @@ import PrivateRoute from "./components/PrivateRoute.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import {AuthProvider} from "./context/AuthContext.jsx";
+import LotDetailPage from "./pages/LotDetailPage.jsx";
 
 export default function App() {
     return (
@@ -27,6 +28,7 @@ export default function App() {
                             {/* Zaštićene rute — PrivateRoute provjeri token */}
                             <Route path="/" element={<PrivateRoute><DashboardPage/></PrivateRoute>}/>
                             <Route path="/lots" element={<PrivateRoute><LotsPage/></PrivateRoute>}/>
+                            <Route path="/lots/:id" element={<PrivateRoute><LotDetailPage/></PrivateRoute>}/>
                             <Route path="/wafers" element={<PrivateRoute><WafersPage/></PrivateRoute>}/>
                             <Route path="/wafers/:id" element={<PrivateRoute><WaferDetailPage/></PrivateRoute>}/>
                         </Routes>

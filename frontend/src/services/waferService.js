@@ -4,19 +4,24 @@ const API_BASE_URL = '/api';
 
 export const waferService = {
 
-    // Dohvata sve plocice (ili filtrirano po lotId ako se prosledi)
-
-    async getAll(lotId = null) {
-        const url = lotId ? `${API_BASE_URL}/wafers?lotId=${lotId}` : `${API_BASE_URL}/wafers`;
-        const res = await apiFetch(url);
+    // Dohvata sve plocice
+    async getAll() {
+        const res = await apiFetch(`${API_BASE_URL}/wafers`);
         if (!res.ok) throw new Error('Neuspešno dohvatanje pločica');
         return res.json();
     },
 
-    // Dohvata sve plocice za određeni Lot
+    // Dohvata sve plocice za odredjeni Lot
     async getByLot(lotId) {
         const res = await apiFetch(`${API_BASE_URL}/lots/${lotId}/wafers`);
         if (!res.ok) throw new Error(`Neuspešno dohvatanje pločica za Lot #${lotId}`);
+        return res.json();
+    },
+
+    // Dohvata jednu plocicu po ID-ju
+    async getById(id) {
+        const res = await apiFetch(`${API_BASE_URL}/wafers/${id}`);
+        if (!res.ok) throw new Error('Neuspesno dohvatanje plocice');
         return res.json();
     },
 

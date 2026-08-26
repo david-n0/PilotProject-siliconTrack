@@ -3,6 +3,7 @@
 namespace App\Lot\Infrastructure;
 
 use App\Lot\Domain\Lot;
+use App\Lot\Domain\LotHistory;
 use App\Lot\Domain\LotRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\LockMode;
@@ -35,4 +36,18 @@ class LotRepository extends ServiceEntityRepository implements LotRepositoryInte
     {
         return $this->findOneBy(['lotNumber' => $lotNumber]) !== null;
     }
+
+    public function saveHistory(LotHistory $history): void
+    {
+        $this->getEntityManager()->persist($history);
+        $this->getEntityManager()->flush();
+    }
+
+    public function findHistoryByLotId(int $lotId): array
+    {
+        return $this->getEntityManager()
+            ->getRepository(LotHistory::class)
+            ->findBy(['lot' => $lotId], ['changedAt' => 'DESC']);
+    }
+
 }

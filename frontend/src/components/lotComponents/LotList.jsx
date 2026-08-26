@@ -49,9 +49,9 @@ export default function LotList({lots, onLotDeleted}) {
                             <td style={{color: '#64748b',}}>{lot.startedAt}</td>
 
                             <td style={{textAlign: 'right'}}>
-                                <button onClick={() => navigate('/wafers')} className="btn btn-secondary"
+                                <button onClick={() => navigate(`/lots/${lot.id}`)} className="btn btn-secondary"
                                         style={{marginRight: '8px'}}>
-                                    Pločice
+                                    Detalji →
                                 </button>
 
                                 {isAdmin && (<button onClick={() => handleDelete(lot.id)} className="btn btn-danger">
