@@ -5,6 +5,7 @@ import {defectService} from '../services/defectService.js';
 import DefectForm from '../components/defectComponents/DefectForm.jsx';
 import DefectList from '../components/defectComponents/DefectList.jsx';
 import {useAuth} from "../context/AuthContext.jsx";
+import WaferDefectMap from "../components/waferComponents/WaferDefectMap.jsx";
 
 export default function WaferDetailPage() {
     const {id} = useParams();   // grabs :id from the URL /wafers/3
@@ -14,9 +15,11 @@ export default function WaferDetailPage() {
 
     const [wafer, setWafer] = useState(null);
     const [defects, setDefects] = useState([]);
+    const [autoHold, setAutoHold] = useState(null);
 
     const [loading, setLoading] = useState(true);
-    const loadData = async () => {
+    const loadData = async (holdInfo = null) => {
+        if (holdInfo) setAutoHold(holdInfo);
         try {
             const [allWafers, defectsData] = await Promise.all([
                 waferService.getById(id),
@@ -50,7 +53,8 @@ export default function WaferDetailPage() {
                 </button>
                 <div>
                     <h1 className="page-title">Wafer: {wafer.serialNumber}</h1>
-                    <p className="page-subtitle">Lot: <strong>{wafer.lotNumber}</strong> &bull; Slot #{wafer.position}</p>
+                    <p className="page-subtitle">Lot: <strong>{wafer.lotNumber}</strong> &bull; Slot #{wafer.position}
+                    </p>
                 </div>
                 <span className={`badge badge-${wafer.status}`}>
                     {wafer.status.toUpperCase()}
@@ -62,6 +66,25 @@ export default function WaferDetailPage() {
             {canEdit && (
                 <DefectForm waferId={parseInt(id)} onDefectLogged={loadData}/>
             )}
+
+            {autoHold && (
+                <div className="card"
+                     style={{border: '2px solid #dc2626', background: '#fee2e2', marginBottom: '20px'}}>
+                    <h3 style={{margin: '0 0 6px', color: '#dc2626'}}>SERIJA AUTOMATSKI ZAUSTAVLJENA (AUTO-HOLD)</h3>
+                    <p style={{margin: 0, fontSize: '13px', color: '#7f1d1d'}}>
+                        Yield serije je pao na <strong>{autoHold.yield}%</strong> — ispod LCL granice.
+                        Status serije je automatski promenjen u <strong>HOLD</strong>.
+                    </p>
+                    <button className="btn btn-secondary" style={{marginTop: '10px'}}
+                            onClick={() => navigate(`/lots/${autoHold.lotId}`)}>
+                        Otvori seriju →
+                    </button>
+                </div>
+            )}
+
+            {/* Wafer Defect Map */}
+            <WaferDefectMap defects={defects}/>
+
             {/* Defect List*/}
             <div className="card" style={{marginTop: '20px'}}>
                 <h2 className="card-title">Istorija defekata ({defects.length})</h2>

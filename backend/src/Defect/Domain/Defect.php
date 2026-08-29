@@ -30,22 +30,30 @@ class Defect
     #[ORM\Column(length: 500, nullable: true)]
     private ?string $description;
 
-    #[ORM\Column(type: 'date_immutable')]
+    // Pozicija defekta na wafer mapi (Die Grid koordinate)
+    #[ORM\Column(type: 'integer')]
+    private int $dieRow;
+    #[ORM\Column(type: 'integer')]
+    private int $dieCol;
+
+    #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $detectedAt;
 
     // Private constructor — jedini nacin kreiranja je Defect::log(...)
-    public function __construct(Wafer $wafer, DefectType $type, DefectSeverity $severity, ?string $description)
+    public function __construct(Wafer $wafer, DefectType $type, DefectSeverity $severity, int $dieRow, int $dieCol, ?string $description)
     {
         $this->wafer = $wafer;
         $this->type = $type;
         $this->severity = $severity;
         $this->description = $description;
+        $this->dieRow = $dieRow;
+        $this->dieCol = $dieCol;
         $this->detectedAt = new \DateTimeImmutable();
     }
 
-    public static function log(Wafer $wafer, DefectType $type, DefectSeverity $severity, ?string $description): self
+    public static function log(Wafer $wafer, DefectType $type, DefectSeverity $severity, int $dieRow = 0, int $dieCol = 0, ?string $description): self
     {
-        return new self($wafer, $type, $severity, $description);
+        return new self($wafer, $type, $severity, $dieRow, $dieCol, $description);
     }
 
     public function getId(): ?int
@@ -71,6 +79,16 @@ class Defect
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    public function getDieRow(): int
+    {
+        return $this->dieRow;
+    }
+
+    public function getDieCol(): int
+    {
+        return $this->dieCol;
     }
 
     public function getDetectedAt(): \DateTimeImmutable

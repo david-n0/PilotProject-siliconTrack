@@ -24,7 +24,7 @@ class Wafer
     #[ORM\Column(type: 'string', enumType: WaferStatus::class)]
     private WaferStatus $status;
 
-    #[ORM\Column(type: 'date_immutable')]
+    #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
 
     #[ORM\ManyToOne(targetEntity: Lot::class)]

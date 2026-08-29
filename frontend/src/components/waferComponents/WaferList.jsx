@@ -21,22 +21,16 @@ export default function WaferList({wafers, onRefresh}) {
     const confirmStatusChange = async () => {
         if (!modal.reason.trim()) return;
         try {
-            await waferService.updateStatus(modal.waferId, modal.newStatus);
+            const res = await waferService.updateStatus(modal.waferId, modal.newStatus, modal.reason.trim());
             closeModal();
             onRefresh();
+            if (res.autoHold) {
+                alert(`AUTO-HOLD\n\nYield serije je pao na ${res.autoHold.yield}% — serija je automatski zaustavljena (HOLD).`);
+            }
         } catch (err) {
             alert(err.message);
         }
     };
-
-    // const handleStatusChange = async (id, newStatus) => {
-    //     try {
-    //         await waferService.updateStatus(id, newStatus);
-    //         onRefresh();
-    //     } catch (err) {
-    //         alert(err.message);
-    //     }
-    // };
 
     const handleDelete = async (id) => {
         if (window.confirm('Da li ste sigurni da želite obrisati ovu pločicu?')) {

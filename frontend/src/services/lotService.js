@@ -44,6 +44,13 @@ export const lotService = {
         return response.json();
     },
 
+    // Dohvatanje Yield trenda po lotovima (za SPC grafikon)
+    async getYieldTrend() {
+        const response = await apiFetch(`${API_BASE_URL}/lots/analytics/yield-trend`);
+        if (!response.ok) throw new Error('Neuspesno preuzimanje yield trenda');
+        return response.json();
+    },
+
     // Brisanje lot-a
     async delete(id) {
         const response = await apiFetch(`${API_BASE_URL}/lots/${id}`, {

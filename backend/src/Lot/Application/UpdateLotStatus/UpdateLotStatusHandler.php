@@ -8,14 +8,6 @@ use App\Lot\Domain\LotStatus;
 
 class UpdateLotStatusHandler
 {
-    // Mapa dozvoljenih tranzicija: iz kog statusa -> u koje statuse moze
-    private const ALLOWED_TRANSITIONS = [
-        'pending' => ['in_production'],
-        'in_production' => ['hold', 'completed', 'rejected'],
-        'hold' => ['in_production', 'rejected'],
-        'completed' => [],  // Finalni status — nema dalje
-        'rejected' => [],  // Finalni status — nema dalje
-    ];
 
     public function __construct(
         private readonly LotRepositoryInterface $lotRepository,
@@ -38,18 +30,8 @@ class UpdateLotStatusHandler
         $oldStatus = $lot->getStatus()->value;
         $newStatus = LotStatus::from($command->newStatus);
 
-        // 2. Validacija: Proveri dozvoljene tranzicije
-        $allowed = self::ALLOWED_TRANSITIONS[$oldStatus] ?? [];
-        if (!in_array($newStatus->value, $allowed, true)) {
-            throw new \InvalidArgumentException(
-                "Nedozvoljena tranzicija statusa: {$oldStatus} → {$newStatus->value}. " .
-                "Dozvoljeni prelazi iz '{$oldStatus}': " . (empty($allowed) ? 'nema (finalni status)' : implode(', ', $allowed))
-            );
-        }
-
-        // 3. Promeni status
+        // 3. Promeni status / Pravila prelaza su u agregatu — ovde samo orkestracija.
         $lot->changeStatus($newStatus);
-
 
         // 4. Zabelezi neizmenjiv audit log
         $history = LotHistory::record(

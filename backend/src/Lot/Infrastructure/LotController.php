@@ -8,6 +8,8 @@ use App\Lot\Application\UpdateLotStatus\UpdateLotStatusCommand;
 use App\Lot\Application\UpdateLotStatus\UpdateLotStatusHandler;
 use App\Lot\Domain\LotRepositoryInterface;
 
+use App\Lot\Domain\YieldPolicy;
+use App\Wafer\Domain\WaferRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,6 +34,7 @@ class LotController extends AbstractController
             'status' => $lot->getStatus()->value,
             'startedAt' => $lot->getStartedAt()->format('H:i d-m-Y'),
             'completedAt' => $lot->getCompletedAt()?->format('H:i d-m-Y'),
+            'allowedNext' => array_map(fn($s) => $s->value, $lot->getStatus()->allowedTransitions()),
         ], $lots);
 
         return $this->json($data);
@@ -66,6 +69,7 @@ class LotController extends AbstractController
             'status' => $lot->getStatus()->value,
             'startedAt' => $lot->getStartedAt()->format('H:i d-m-Y'),
             'completedAt' => $lot->getCompletedAt()?->format('H:i d-m-Y'),
+            'allowedNext' => array_map(fn($s) => $s->value, $lot->getStatus()->allowedTransitions()),
         ]);
     }
 
@@ -105,6 +109,32 @@ class LotController extends AbstractController
         ], $entries);
         return $this->json($data);
     }
+
+    // GET /api/lots/analytics/yield-trend — Yield po svakom lotu za SPC grafikon
+    #[Route('/analytics/yield-trend', methods: ['GET'])]
+    public function yieldTrend(LotRepositoryInterface $lotRepo, WaferRepositoryInterface $waferRepo): JsonResponse
+    {
+        $lots = $lotRepo->findAll();
+        $data = [];
+        foreach ($lots as $lot) {
+            $wafers = $waferRepo->findByLotId($lot->getId());
+            $total = count($wafers);
+            if ($total === 0) continue;
+            $ok = count(array_filter($wafers, fn($w) => $w->getStatus()->value === 'ok'));
+            $yield = YieldPolicy::calculate($ok, $total);
+            $data[] = [
+                'lotId' => $lot->getId(),
+                'lotNumber' => $lot->getLotNumber(),
+                'product' => $lot->getProduct(),
+                'yield' => $yield,
+                'total' => $total,
+                'ok' => $ok,
+                'startedAt' => $lot->getStartedAt()->format('d-m'),
+            ];
+        }
+        return $this->json($data);
+    }
+
 
     #[Route('/{id}', methods: ['DELETE'])]
     public function delete(int $id, LotRepositoryInterface $repo, EntityManagerInterface $entityManager): JsonResponse

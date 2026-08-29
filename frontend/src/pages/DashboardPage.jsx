@@ -4,6 +4,7 @@ import {lotService} from '../services/lotService';
 import {waferService} from '../services/waferService';
 import {defectService} from "../services/defectService.js";
 import {PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend} from 'recharts';
+import SpcYieldChart from "../components/charts/SpcYieldChart.jsx";
 
 const PIE_COLORS = ['#16a34a', '#eab308', '#dc2626'];
 const BAR_COLORS = {
@@ -20,6 +21,7 @@ export default function DashboardPage() {
     const [defects, setDefects] = useState([]);
     const [recentHistory, setRecentHistory] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [yieldTrend, setYieldTrend] = useState([]);
     const navigate = useNavigate(); // Zbog navigate()
 
     useEffect(() => {
@@ -33,6 +35,13 @@ export default function DashboardPage() {
                 setLots(lotsData);
                 setWafers(wafersData);
                 setDefects(defectsData);
+
+                try {
+                    const yieldData = await lotService.getYieldTrend();
+                    setYieldTrend(yieldData);
+                } catch (e) {
+                    console.warn('Yield trend nedostupan:', e);
+                }
 
                 // Dohvati istoriju promena za poslednjih 5 aktivnosti (iz svih lotova)
                 const allHistory = [];
@@ -182,6 +191,13 @@ export default function DashboardPage() {
                     </span>
                 </div>
             </div>
+
+            {/* SPC Control Chart */}
+            {!loading && yieldTrend.length > 0 && (
+                <div style={{ marginBottom: '24px' }}>
+                    <SpcYieldChart data={yieldTrend} />
+                </div>
+            )}
 
             {/* Grafikoni */}
             {!loading && (pieData.length > 0 || barData.length > 0) && (

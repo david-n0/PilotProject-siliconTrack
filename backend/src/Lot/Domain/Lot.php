@@ -31,7 +31,7 @@ class Lot
     #[ORM\Column(length: 255)]
     private ?string $product = null;
 
-    #[ORM\Column(length: 255,nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $createdBy = null;
 
     /**
@@ -55,6 +55,10 @@ class Lot
 
     public function changeStatus(LotStatus $newStatus): void
     {
+        if (!$this->status->canTransitionTo($newStatus)) {
+            throw new InvalidLotTransitionException($this->status, $newStatus);
+        }
+
         $this->status = $newStatus;
 
         if ($newStatus === LotStatus::Completed || $newStatus === LotStatus::Rejected) {

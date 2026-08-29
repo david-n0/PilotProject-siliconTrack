@@ -4,15 +4,6 @@ import {lotService} from '../services/lotService.js';
 import {waferService} from '../services/waferService.js';
 import {useAuth} from '../context/AuthContext.jsx';
 
-// Biznis pravila: iz kog statusa -> u koji može
-const ALLOWED_TRANSITIONS = {
-    pending: ['in_production'],
-    in_production: ['hold', 'completed', 'rejected'],
-    hold: ['in_production', 'rejected'],
-    completed: [],
-    rejected: [],
-};
-
 const STATUS_LABELS = {
     pending: 'PENDING (Na cekanju)',
     in_production: 'IN PRODUCTION (U proizvodnji)',
@@ -56,7 +47,7 @@ export default function LotDetailPage() {
             }
 
             // Postavi prvi dozvoljeni status kao default
-            const allowed = ALLOWED_TRANSITIONS[lotData.status] || [];
+            const allowed = lotData.allowedNext ?? [];
             setNewStatus(allowed.length > 0 ? allowed[0] : '');
         } catch (err) {
             console.error(err);
@@ -127,7 +118,7 @@ export default function LotDetailPage() {
     const yieldMeta = getYieldMeta(yieldNum);
 
     // Dozvoljeni prelazi iz trenutnog statusa
-    const allowedNext = ALLOWED_TRANSITIONS[lot.status] || [];
+    const allowedNext = lot.allowedNext ?? [];
     const isFinished = allowedNext.length === 0;
 
     return (
@@ -230,10 +221,10 @@ export default function LotDetailPage() {
             {/* Finalni status — nema dalje */}
             {isFinished && (
                 <div className="card"
-                     style={{borderLeft: '4px solid ' + (lot.status === 'completed' ? '#16a34a' : '#dc2626')}}>
+                     style={{border: '2px solid ' + (lot.status === 'completed' ? '#16a34a' : '#dc2626')}}>
                     <p style={{
                         margin: 0,
-                        fontWeight: '700',
+                        fontWeight: '500',
                         color: lot.status === 'completed' ? '#16a34a' : '#dc2626'
                     }}>
                         {lot.status === 'completed' ? 'Serija je uspesno zavrsena.' : 'Serija je odbijena.'} Dalji
@@ -274,6 +265,16 @@ export default function LotDetailPage() {
                                             <span style={{color: '#94a3b8', fontWeight: '700'}}>&rarr;</span>
                                             <span className={`badge badge-${h.toStatus}`}
                                                   style={{fontSize: '11px'}}>{h.toStatus.replace('_', ' ').toUpperCase()}</span>
+                                            {h.changedByEmail === 'system@silicontrack' && (
+                                                <span className="badge"
+                                                      style={{
+                                                          background: '#fee2e2',
+                                                          color: '#dc2626',
+                                                          fontSize: '10px'
+                                                      }}>
+                                                    AUTO
+                                                </span>
+                                            )}
                                         </div>
                                         <p style={{margin: '4px 0 2px', fontSize: '12px', color: '#64748b'}}>
                                             Izmenio: <strong>{h.changedByEmail}</strong>

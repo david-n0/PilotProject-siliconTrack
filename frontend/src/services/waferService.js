@@ -37,10 +37,10 @@ export const waferService = {
     },
 
     // Menja status plocice ('ok' | 'defective' | 'scrapped')
-    async updateStatus(id, status) {
+    async updateStatus(id, status, reason = null) {
         const res = await apiFetch(`${API_BASE_URL}/wafers/${id}/status`, {
             method: 'PATCH',
-            body: JSON.stringify({status})
+            body: JSON.stringify({status, reason})
         });
         const json = await res.json();
         if (!res.ok) throw new Error(json.error || 'Neuspešna promena statusa');

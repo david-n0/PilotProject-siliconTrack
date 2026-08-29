@@ -3,7 +3,7 @@ import {defectService} from '../../services/defectService.js';
 
 export default function DefectForm({waferId, onDefectLogged}) {
     const [form, setForm] = useState({
-        type: 'scratch', severity: 'minor', description: ''
+        type: 'scratch', severity: 'minor', dieRow: '', dieCol: '', description: ''
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -24,9 +24,9 @@ export default function DefectForm({waferId, onDefectLogged}) {
         setLoading(true);
         setError(null);
         try {
-            await defectService.log({...form, waferId});
-            setForm({type: 'scratch', severity: 'minor', description: ''});
-            onDefectLogged();
+            const res = await defectService.log({...form, waferId});
+            setForm({type: 'scratch', severity: 'minor', dieRow: '', dieCol: '', description: ''});
+            onDefectLogged(res.autoHold ?? null);
         } catch (err) {
             setError(err.message);
         } finally {
@@ -34,7 +34,7 @@ export default function DefectForm({waferId, onDefectLogged}) {
         }
     };
 
-    return (<div className="card">
+    return (<div className="card" style={{gridTemplateColumns: '160px 160px 1fr 90px 90px auto'}}>
         <h3 className="card-title" style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
             Prijavi Novi Defekt na Pločici
         </h3>
@@ -70,6 +70,16 @@ export default function DefectForm({waferId, onDefectLogged}) {
                     placeholder="Npr. Vidljiva ogrebotina na die #12 blizu ivice..."
                     required
                 />
+            </div>
+            <div className="form-group">
+                <label className="form-label">Die Red (Y) *</label>
+                <input type="number" name="dieRow" value={form.dieRow} onChange={handleChange}
+                       className="input-control" min="0" max="20" placeholder="0-20" required/>
+            </div>
+            <div className="form-group">
+                <label className="form-label">Die Kolona (X) *</label>
+                <input type="number" name="dieCol" value={form.dieCol} onChange={handleChange}
+                       className="input-control" min="0" max="20" placeholder="0-20" required/>
             </div>
             <div className="form-group">
                 <button type="submit" className="btn btn-danger" disabled={loading || !form.description.trim()}

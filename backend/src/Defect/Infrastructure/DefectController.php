@@ -29,6 +29,7 @@ class DefectController extends AbstractController
             'lotNumber' => $d->getWafer()->getLot()->getLotNumber(),
             'type' => $d->getType()->value,
             'severity' => $d->getSeverity()->value,
+            'dieCol' => $d->getDieCol(),
             'description' => $d->getDescription(),
             'detectedAt' => $d->getDetectedAt()->format('H:i d-m-Y'),
         ], $defects);
@@ -49,6 +50,8 @@ class DefectController extends AbstractController
             'lotNumber' => $d->getWafer()->getLot()->getLotNumber(),
             'type' => $d->getType()->value,
             'severity' => $d->getSeverity()->value,
+            'dieRow' => $d->getDieRow(),
+            'dieCol' => $d->getDieCol(),
             'description' => $d->getDescription(),
             'detectedAt' => $d->getDetectedAt()->format('H:i d-m-Y'),
         ], $defects);
@@ -63,15 +66,24 @@ class DefectController extends AbstractController
         $body = json_decode($request->getContent(), true);
 
         try {
-            $handler->handle(new LogDefectCommand(
+            $autoHold = $handler->handle(new LogDefectCommand(
                 (int)($body['waferId'] ?? 0),
                 $body['type'] ?? '',
                 $body['severity'] ?? '',
-                $body['description'] ?? null
+                (int)($body['dieRow'] ?? 0),
+                (int)($body['dieCol'] ?? 0),
+                $body['description'] ?? null,
+                $this->getUser()?->getUserIdentifier() ?? 'system',
             ));
 
-            return $this->json(['message' => 'Defect logged. Wafer status set to defective.'],
-                Response::HTTP_CREATED);
+            return $this->json([
+                'message' => 'Defect logged. Wafer status set to defective.',
+                'autoHold' => $autoHold === null ? null : [
+                    'lotId' => $autoHold->lotId,
+                    'yield' => $autoHold->yieldPercent,
+                    'note' => $autoHold->note,
+                ],
+            ], Response::HTTP_CREATED);
 
         } catch (\InvalidArgumentException $e) {
             return $this->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
@@ -79,7 +91,6 @@ class DefectController extends AbstractController
             return $this->json(['error' => 'Invalid type or severity value.'], Response::HTTP_BAD_REQUEST);
         }
     }
-
 
     // DELETE /api/defects/{id} — obriši defekt
     #[Route('/defects/{id}', methods: ['DELETE'])]

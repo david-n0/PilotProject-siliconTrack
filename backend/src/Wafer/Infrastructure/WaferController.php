@@ -103,8 +103,14 @@ class WaferController extends AbstractController
     {
         $body = json_decode($request->getContent(), true);
         try {
-            $handler->handle(new UpdateWaferStatusCommand($id, $body['status'] ?? ''));
-            return $this->json(['message' => 'Wafer status updated.']);
+            $autoHold = $handler->handle(new UpdateWaferStatusCommand($id, $body['status'] ?? '', changedByEmail: $this->getUser()?->getUserIdentifier() ?? 'system',
+                reason: $body['reason'] ?? null));
+            return $this->json(['message' => 'Wafer status updated.',
+                'autoHold' => $autoHold === null ? null : [
+                    'lotId' => $autoHold->lotId,
+                    'yield' => $autoHold->yieldPercent,
+                    'note' => $autoHold->note,
+                ],]);
         } catch (\InvalidArgumentException $e) {
             return $this->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         } catch (\ValueError $e) {
