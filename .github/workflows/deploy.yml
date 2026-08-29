@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-       # 1. Preuzmi tvoj kod
+      # 1. Preuzmi tvoj kod
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -39,6 +39,15 @@ jobs:
           IMAGE_NAME="europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/silicontrack-backend/silicontrack-backend-david:${{ github.sha }}"
           docker build -t $IMAGE_NAME ./backend
           docker push $IMAGE_NAME
+
+      - name: Run Database Migrations
+        run: |
+          IMAGE_NAME="europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/silicontrack-backend/silicontrack-backend-david:${{ github.sha }}"
+          docker run --rm \
+            -e APP_ENV=prod \
+            -e APP_SECRET='${{ secrets.APP_SECRET }}' \
+            -e DATABASE_URL='${{ secrets.DATABASE_URL }}' \
+            "$IMAGE_NAME" php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 
       # 6. Pokreni Cloud Run servis
       - name: Deploy to Cloud Run
