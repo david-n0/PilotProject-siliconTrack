@@ -10,6 +10,5 @@ class RegisterUserCommand
         public readonly string $name,
         public readonly string $email,
         public readonly string $plainPassword,  // plain text koji će handler hesovati
-        public readonly string $role = 'ROLE_ENGINEER', // podrazumevana uloga
     ) {}
 }

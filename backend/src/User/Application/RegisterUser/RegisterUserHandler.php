@@ -24,13 +24,9 @@ class RegisterUserHandler
             throw new \InvalidArgumentException("Email '{$command->email}' is already registered.");
         }
 
-        // 2. Kovertuj string role u enum UserRole, baca ValueError ako se prosledi nepostojeca vrednost
-        // Blokiraj samoregistraciju kao Admin — Admin se dodeljuje samo iz baze
-        if (UserRole::from($command->role) === UserRole::Admin) {
-            throw new \InvalidArgumentException('Admin role cannot be self-assigned during registration.');
-        } else {
-            $role = UserRole::from($command->role);
-        }
+        // 2. Samoregistracijom se UVEK dobija najniza uloga.
+        // Vise uloge dodeljuje administrator (app:create-admin / admin panel).
+        $role = UserRole::Viewer;
 
         // 3. Napravi "prazan" User objekat samo da bi passwordHasher mogao da radi
         //    (treba mu instancu User-a jer koristi security config za taj tip)

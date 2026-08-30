@@ -8,8 +8,7 @@ export default function RegisterPage() {
     const [form, setForm] = useState({
         name: '',
         email: '',
-        password: '',
-        role: 'ROLE_VIEWER'
+        password: ''
     });
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -23,7 +22,7 @@ export default function RegisterPage() {
         setError(null);
         setLoading(true);
         try {
-            await authService.register(form.name, form.email, form.password, form.role);
+            await authService.register(form.name, form.email, form.password);
             // Registracija uspela → idi na login
             navigate('/login');
         } catch (err) {
@@ -83,18 +82,9 @@ export default function RegisterPage() {
                         />
                     </div>
 
-                    <div className="form-group" style={{marginBottom: '24px'}}>
-                        <label className="form-label">Role</label>
-                        <select
-                            name="role"
-                            value={form.role}
-                            onChange={handleChange}
-                            className="select-control"
-                        >
-                            <option value="ROLE_VIEWER">Viewer (Read Only)</option>
-                            <option value="ROLE_ENGINEER">Engineer (Production & QA)</option>
-                        </select>
-                    </div>
+                    <p style={{fontSize: '13px', color: '#64748b', marginBottom: '20px'}}>
+                        Novi nalozi dobijaju <strong>Viewer</strong> pristup. Vise privilegije dodeljuje administrator.
+                    </p>
 
                     <button
                         type="submit"

@@ -4,14 +4,14 @@ namespace App\Wafer\Application\CreateWafer;
 
 use App\Lot\Domain\LotRepositoryInterface;
 use App\Wafer\Domain\Wafer;
-use App\Wafer\Infrastructure\WaferRepository;
+use App\Wafer\Domain\WaferRepositoryInterface;
 
 class CreateWaferHandler
 {
 
     public function __construct(
-        private readonly WaferRepository        $waferRepository,
-        private readonly LotRepositoryInterface $lotRepository)
+        private readonly WaferRepositoryInterface $waferRepository,
+        private readonly LotRepositoryInterface   $lotRepository)
     {
     }
 

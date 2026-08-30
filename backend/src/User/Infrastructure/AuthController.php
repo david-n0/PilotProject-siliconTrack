@@ -66,10 +66,9 @@ class AuthController extends AbstractController
         }
         try {
             $handler->handle(new RegisterUserCommand(
-                email: $body['email'],
                 name: $body['name'],
-                plainPassword: $body['password'],
-                role: $body['role'] ?? 'ROLE_ENGINEER', // ako ne posaljes, dobija Engineer
+                email: $body['email'],
+                plainPassword: $body['password']
             ));
             return $this->json(
                 ['message' => 'User registered successfully.'],

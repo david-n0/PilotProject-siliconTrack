@@ -38,8 +38,21 @@ jobs:
         run: |
           IMAGE_NAME="europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/silicontrack-backend/silicontrack-backend-david:${{ github.sha }}"
           docker build -t $IMAGE_NAME ./backend
+          docker build --build-arg JWT_PASSPHRASE="${{ secrets.JWT_PASSPHRASE }}" -t $IMAGE_NAME ./backend
           docker push $IMAGE_NAME
 
+      # JEDNOKRATNO: upisi baseline kao vec primenjen (sema u prod bazi je vec tacna)
+      - name: ONE-TIME register baseline migration
+        run: |
+          IMAGE_NAME="europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/silicontrack-backend/silicontrack-backend-david:${{ github.sha }}"
+          docker run --rm \
+            -e APP_ENV=prod \
+            -e APP_SECRET='${{ secrets.APP_SECRET }}' \
+            -e DATABASE_URL='${{ secrets.DATABASE_URL }}' \
+            "$IMAGE_NAME" sh -c "\
+              php bin/console doctrine:migrations:sync-metadata-storage && \
+              php bin/console doctrine:migrations:version --add --all --no-interaction"
+          
       - name: Run Database Migrations
         run: |
           IMAGE_NAME="europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/silicontrack-backend/silicontrack-backend-david:${{ github.sha }}"
@@ -58,7 +71,7 @@ jobs:
             --platform managed \
             --region europe-west1 \
             --allow-unauthenticated \
-            --set-env-vars "APP_ENV=prod,APP_SECRET=${{ secrets.APP_SECRET }},DATABASE_URL=${{ secrets.DATABASE_URL }},JWT_PASSPHRASE=f76015fb15eb11d46c94c951567293d0e7606a05d5b835e1e9eea1f2dc0c358a,CORS_ALLOW_ORIGIN=^https?://.*$"
+            --set-env-vars "APP_ENV=prod,APP_SECRET=${{ secrets.APP_SECRET }},DATABASE_URL=${{ secrets.DATABASE_URL }},JWT_PASSPHRASE=${{ secrets.JWT_PASSPHRASE }},CORS_ALLOW_ORIGIN=^https://silicontrack\.(web\.app|firebaseapp\.com)$"
 
   # 2. TEK KADA BACKEND USPE, POKREĆE SE FRONTEND
   deploy-frontend:

@@ -50,6 +50,9 @@ RUN echo '<VirtualHost *:8080>\n\
 
 RUN a2enmod rewrite
 
+# Lozinka za JWT ključeve dolazi iz build-arg (GitHub secret), ne iz .env
+ARG JWT_PASSPHRASE
+ENV JWT_PASSPHRASE=$JWT_PASSPHRASE
 
 # 9. Kreiramo var i config/jwt foldere i dajemo Apache-u dozvole i generišemo zvanične Symfony Lexik JWT ključeve
 RUN mkdir -p /var/www/html/var /var/www/html/config/jwt && \
