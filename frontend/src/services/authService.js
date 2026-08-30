@@ -1,5 +1,8 @@
 const API_BASE_URL = '/api'
 
+import {signInWithPopup, signOut} from 'firebase/auth';
+import {auth, googleProvider} from '../firebase.js';
+
 export const authService = {
 
     // Salje kredencijale, dobija JWT token nazad
@@ -22,6 +25,25 @@ export const authService = {
 
     },
 
+    // Google prijava: Firebase potvrdi identitet, nas backend izda svoj JWT
+    async loginWithGoogle() {
+        const result = await signInWithPopup(auth, googleProvider);
+        const idToken = await result.user.getIdToken();
+
+        const res = await fetch(`${API_BASE_URL}/auth/google`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({idToken}),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Google prijava nije uspela.');
+
+        localStorage.setItem('jwt_token', data.token);
+        await signOut(auth);   // Firebase sesija nam vise ne treba — imamo svoj token
+        return data.token;
+    },
+
     // Registruje novog korisnika (ne loguje automatski)
     async register(name, email, password) {
         const res = await fetch(`${API_BASE_URL}/register`, {
@@ -31,8 +53,8 @@ export const authService = {
         })
 
         const data = await res.json();
-        if(!res.ok){
-            throw new Error(data.message|| 'Registration failed.');
+        if (!res.ok) {
+            throw new Error(data.message || 'Registration failed.');
         }
 
         return data;
@@ -46,7 +68,7 @@ export const authService = {
     // Dohvati podatke o trenutnom korisniku sa /api/me
     async getMe() {
         const res = await fetch(`${API_BASE_URL}/me`, {
-            headers: { 'Authorization': `Bearer ${this.getToken()}` }
+            headers: {'Authorization': `Bearer ${this.getToken()}`}
         });
         if (!res.ok) throw new Error('Could not fetch user info.');
         return res.json();

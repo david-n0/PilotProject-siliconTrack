@@ -19,5 +19,13 @@ services:
     App\:
         resource: '../src/'
 
+    App\User\Infrastructure\GoogleTokenVerifier:
+        arguments:
+            $firebaseProjectId: '%env(FIREBASE_PROJECT_ID)%'
+
+    App\User\Application\LoginWithGoogle\LoginWithGoogleHandler:
+        arguments:
+            $googleDefaultRole: '%env(GOOGLE_DEFAULT_ROLE)%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

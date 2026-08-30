@@ -2,6 +2,7 @@
 
 namespace App\User\Infrastructure;
 
+use App\User\Application\LoginWithGoogle\LoginWithGoogleHandler;
 use App\User\Application\RegisterUser\RegisterUserCommand;
 use App\User\Application\RegisterUser\RegisterUserHandler;
 use App\User\Domain\UserRepositoryInterface;
@@ -97,6 +98,24 @@ class AuthController extends AbstractController
             'name' => $user->getName(),
             'roles' => $user->getRoles(),
         ]);
+    }
+
+    // POST /api/auth/google
+    // Body: { "idToken": "<Firebase ID token>" }
+    #[Route('/auth/google', methods: ['POST'])]
+    public function loginWithGoogle(
+        Request                  $request,
+        LoginWithGoogleHandler   $handler,
+        JWTTokenManagerInterface $jwtManager,
+    ): JsonResponse {
+        $body = json_decode($request->getContent(), true);
+
+        try {
+            $user = $handler->handle($body['idToken'] ?? '');
+            return $this->json(['token' => $jwtManager->create($user)]);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['message' => $e->getMessage()], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
 }

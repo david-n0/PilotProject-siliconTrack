@@ -39,18 +39,19 @@ class Lot
      * @param int|null $waferCount
      * @param string|null $product
      */
-    public function __construct(?string $lotNumber, ?string $product, ?int $waferCount)
+    public function __construct(?string $lotNumber, ?string $product, ?int $waferCount, string $createdBy)
     {
         $this->lotNumber = $lotNumber;
         $this->product = $product;
         $this->waferCount = $waferCount;
+        $this->createdBy = $createdBy;
         $this->status = LotStatus::Pending; //Always starts as pending
         $this->startedAt = new \DateTimeImmutable(); //Starts now
     }
 
-    public static function create(string $lotNumber, string $product, int $waferCount): self
+    public static function create(string $lotNumber, string $product, int $waferCount, string $createdBy = 'system'): self
     {
-        return new self($lotNumber, $product, $waferCount);
+        return new self($lotNumber, $product, $waferCount, $createdBy);
     }
 
     public function changeStatus(LotStatus $newStatus): void

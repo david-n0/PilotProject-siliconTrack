@@ -29,6 +29,7 @@ class DefectController extends AbstractController
             'lotNumber' => $d->getWafer()->getLot()->getLotNumber(),
             'type' => $d->getType()->value,
             'severity' => $d->getSeverity()->value,
+            'dieRow' => $d->getDieRow(),
             'dieCol' => $d->getDieCol(),
             'description' => $d->getDescription(),
             'detectedAt' => $d->getDetectedAt()->format('H:i d-m-Y'),

@@ -7,7 +7,8 @@ class CreateLotCommand
     public function __construct(
         public readonly string $lotNumber,
         public readonly string $product,
-        public readonly int $waferCount,
+        public readonly int    $waferCount,
+        public readonly string $createdBy = 'system',
     )
     {
     }

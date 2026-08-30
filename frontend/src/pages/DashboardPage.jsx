@@ -105,7 +105,7 @@ export default function DashboardPage() {
             cssClass: 'stat-card-yield-critical',
             color: '#dc2626',
             bg: '#fee2e2',
-            label: 'KRITIČNO (<50%)',
+            label: 'KRITIČNO (<75%)',
             hint: 'Zahteva hitnu proveru'
         };
     };
@@ -136,33 +136,6 @@ export default function DashboardPage() {
                 <p className="page-subtitle">Kliknite na bilo koju karticu za direktan pregled podataka</p>
             </div>
             <div className="stats-grid">
-                <div onClick={() => navigate('/lots')} className="stat-card stat-card-blue">
-                    <div className="stat-card-title">Ukupno Serija (Lots)</div>
-                    <div className="stat-card-value" style={{color: '#0284c7'}}>{loading ? '...' : lots.length}</div>
-                    <div className="stat-card-hint">Pregled serija</div>
-                </div>
-                <div onClick={() => navigate('/wafers')} className="stat-card stat-card-gray">
-                    <div className="stat-card-title">Ukupno Plocica (Wafers)</div>
-                    <div className="stat-card-value" style={{color: '#0f294a'}}>{loading ? '...' : wafers.length}</div>
-                    <div className="stat-card-hint">Pregled plocica</div>
-                </div>
-                <div onClick={() => navigate('/wafers')} className="stat-card stat-card-green">
-                    <div className="stat-card-title">Ispravne Plocice (OK)</div>
-                    <div className="stat-card-value" style={{color: '#16a34a'}}>{loading ? '...' : okWafers}</div>
-                    <div className="stat-card-hint">Detalji</div>
-                </div>
-                <div onClick={() => navigate('/wafers')} className="stat-card stat-card-yellow">
-                    <div className="stat-card-title">Defektne Plocice</div>
-                    <div className="stat-card-value"
-                         style={{color: '#eab308'}}>{loading ? '...' : defectiveWafers}</div>
-                    <div className="stat-card-hint">Detalji</div>
-                </div>
-                <div onClick={() => navigate('/wafers')} className="stat-card stat-card-red">
-                    <div className="stat-card-title">Odbacene (Scrapped)</div>
-                    <div className="stat-card-value" style={{color: '#dc2626'}}>{loading ? '...' : scrappedWafers}</div>
-                    <div className="stat-card-hint">Detalji</div>
-                </div>
-
                 {/* Yield */}
                 <div className={`stat-card stat-card-yield ${yieldMeta.cssClass}`}>
                     <div className="yield-header">
@@ -190,6 +163,33 @@ export default function DashboardPage() {
                         {yieldMeta.hint}
                     </span>
                 </div>
+                <div onClick={() => navigate('/lots')} className="stat-card stat-card-blue">
+                    <div className="stat-card-title">Ukupno Serija (Lots)</div>
+                    <div className="stat-card-value" style={{color: '#0284c7'}}>{loading ? '...' : lots.length}</div>
+                    <div className="stat-card-hint">Pregled serija</div>
+                </div>
+                <div onClick={() => navigate('/wafers')} className="stat-card stat-card-gray">
+                    <div className="stat-card-title">Ukupno Plocica (Wafers)</div>
+                    <div className="stat-card-value" style={{color: '#0f294a'}}>{loading ? '...' : wafers.length}</div>
+                    <div className="stat-card-hint">Pregled plocica</div>
+                </div>
+                <div onClick={() => navigate('/wafers')} className="stat-card stat-card-green">
+                    <div className="stat-card-title">Ispravne Plocice (OK)</div>
+                    <div className="stat-card-value" style={{color: '#16a34a'}}>{loading ? '...' : okWafers}</div>
+                    <div className="stat-card-hint">Detalji</div>
+                </div>
+                <div onClick={() => navigate('/wafers')} className="stat-card stat-card-yellow">
+                    <div className="stat-card-title">Defektne Plocice</div>
+                    <div className="stat-card-value"
+                         style={{color: '#eab308'}}>{loading ? '...' : defectiveWafers}</div>
+                    <div className="stat-card-hint">Detalji</div>
+                </div>
+                <div onClick={() => navigate('/wafers')} className="stat-card stat-card-red">
+                    <div className="stat-card-title">Odbacene (Scrapped)</div>
+                    <div className="stat-card-value" style={{color: '#dc2626'}}>{loading ? '...' : scrappedWafers}</div>
+                    <div className="stat-card-hint">Detalji</div>
+                </div>
+
             </div>
 
             {/* SPC Control Chart */}

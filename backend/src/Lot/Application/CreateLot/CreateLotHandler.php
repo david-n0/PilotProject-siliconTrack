@@ -17,7 +17,7 @@ class CreateLotHandler
         if ($this->lotRepository->existByLotNumber($command->lotNumber)) {
             throw new \InvalidArgumentException("Lot number {$command->lotNumber} already exists!");
         } else {
-            $lot = Lot::create($command->lotNumber, $command->product, $command->waferCount);
+            $lot = Lot::create($command->lotNumber, $command->product, $command->waferCount,  $command->createdBy);
             $this->lotRepository->save($lot);
         }
 

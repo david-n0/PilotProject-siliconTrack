@@ -1,11 +1,11 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { authService } from '../services/authService.js';
+import {createContext, useContext, useState, useEffect} from 'react';
+import {authService} from '../services/authService.js';
 
 // Kreira "globalni prostor" koji sve komponente mogu procitati
 const AuthContext = createContext(null);
 
 // AuthProvider "omota" celu aplikaciju i drzi korisnika u state-u
-export function AuthProvider({ children }) {
+export function AuthProvider({children}) {
     const [user, setUser] = useState(null);       // { id, email, name, roles }
     const [loading, setLoading] = useState(true); // dok proveravamo token pri startu
 
@@ -34,6 +34,12 @@ export function AuthProvider({ children }) {
         setUser(userData);
     };
 
+    const loginWithGoogle = async () => {
+        await authService.loginWithGoogle();
+        const userData = await authService.getMe();
+        setUser(userData);
+    };
+
     // Ova funkcija se poziva sa Navbar dugmeta "Logout"
     const logout = () => {
         authService.logout();
@@ -43,7 +49,7 @@ export function AuthProvider({ children }) {
     // Sve komponente unutar AuthProvider-a mogu zvati useAuth() i dobiti:
     // user, login, logout, loading
     return (
-        <AuthContext.Provider value={{ user, login, logout, loading }}>
+        <AuthContext.Provider value={{user, login, loginWithGoogle, logout, loading}}>
             {children}
         </AuthContext.Provider>
     );

@@ -70,6 +70,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
+    public function changeRole(UserRole $role): void
+    {
+        if ($role === UserRole::User) {
+            throw new \DomainException('ROLE_USER se ne dodeljuje rucno.');
+        }
+        $this->roles = [$role->value];
+    }
+
     // Symfony traži ovu metodu — vraća niz uloga
     // array_unique sprečava duplikate ako 'ROLE_USER' već postoji u nizu
     public function getRoles(): array

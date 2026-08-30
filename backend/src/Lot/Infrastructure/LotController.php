@@ -31,6 +31,7 @@ class LotController extends AbstractController
             'lotNumber' => $lot->getLotNumber(),
             'product' => $lot->getProduct(),
             'waferCount' => $lot->getWaferCount(),
+            'createdBy' => $lot->getCreatedBy(),
             'status' => $lot->getStatus()->value,
             'startedAt' => $lot->getStartedAt()->format('H:i d-m-Y'),
             'completedAt' => $lot->getCompletedAt()?->format('H:i d-m-Y'),
@@ -48,6 +49,7 @@ class LotController extends AbstractController
             $body['lotNumber'] ?? '',
             $body['product'] ?? '',
             $body['waferCount'] ?? 0,
+            $this->getUser()?->getUserIdentifier() ?? 'system',
         ));
 
         return $this->json(['message' => 'Lot created'], Response::HTTP_CREATED);
@@ -66,6 +68,7 @@ class LotController extends AbstractController
             'lotNumber' => $lot->getLotNumber(),
             'product' => $lot->getProduct(),
             'waferCount' => $lot->getWaferCount(),
+            'createdBy' => $lot->getCreatedBy(),
             'status' => $lot->getStatus()->value,
             'startedAt' => $lot->getStartedAt()->format('H:i d-m-Y'),
             'completedAt' => $lot->getCompletedAt()?->format('H:i d-m-Y'),
