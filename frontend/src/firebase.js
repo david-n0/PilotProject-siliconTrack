@@ -1,7 +1,7 @@
 import {initializeApp} from 'firebase/app';
 import {getAuth, GoogleAuthProvider} from 'firebase/auth';
 
-// Ove vrednosti NISU tajne — Firebase web config je javan po dizajnu.
+// Ove vrednosti NISU tajne - Firebase web config je javan po dizajnu.
 // Pristup se kontrolise kroz Authorized domains + verifikaciju tokena na backendu.
 const firebaseConfig = {
     apiKey: "AIzaSyAEbe8bA4l3JZmcq3col0sHKT8hDDXCt1c",

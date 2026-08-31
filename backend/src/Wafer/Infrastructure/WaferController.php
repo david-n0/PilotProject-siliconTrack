@@ -35,7 +35,7 @@ class WaferController extends AbstractController
             'status' => $w->getStatus()->value,
             'lotId' => $w->getLot()->getId(),
             'lotNumber' => $w->getLot()->getLotNumber(),
-            'createdAt' => $w->getCreatedAt()->format('H:i d-m-Y'),
+            'createdAt' => $w->getCreatedAt()->format(DATE_ATOM),
         ], $wafers);
         return $this->json($data);
     }
@@ -53,7 +53,7 @@ class WaferController extends AbstractController
             'status' => $w->getStatus()->value,
             'lotId' => $w->getLot()->getId(),
             'lotNumber' => $w->getLot()->getLotNumber(),
-            'createdAt' => $w->getCreatedAt()->format('H:i d-m-Y'),
+            'createdAt' => $w->getCreatedAt()->format(DATE_ATOM),
         ], $wafers);
         return $this->json($data);
     }
@@ -77,7 +77,6 @@ class WaferController extends AbstractController
     }
 
     // GET /api/wafers/{id}
-
     #[Route('/wafers/{id}', methods: ['GET'])]
     public function show(int $id, WaferRepositoryInterface $repo): JsonResponse
     {
@@ -92,7 +91,7 @@ class WaferController extends AbstractController
             'status' => $wafer->getStatus()->value,
             'lotId' => $wafer->getLot()->getId(),
             'lotNumber' => $wafer->getLot()->getLotNumber(),
-            'createdAt' => $wafer->getCreatedAt()->format('H:i d-m-Y'),
+            'createdAt' => $wafer->getCreatedAt()->format(DATE_ATOM),
         ]);
     }
 

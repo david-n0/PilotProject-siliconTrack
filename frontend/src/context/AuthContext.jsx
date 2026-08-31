@@ -9,7 +9,7 @@ export function AuthProvider({children}) {
     const [user, setUser] = useState(null);       // { id, email, name, roles }
     const [loading, setLoading] = useState(true); // dok proveravamo token pri startu
 
-    // Kada se app ucita — proveri da li postoji token u localStorage
+    // Kada se app ucita - proveri da li postoji token u localStorage
     // Ako postoji, dohvati podatke o korisniku sa /api/me
     useEffect(() => {
         const token = authService.getToken();
@@ -17,7 +17,7 @@ export function AuthProvider({children}) {
             authService.getMe()
                 .then(userData => setUser(userData))
                 .catch(() => {
-                    // Token je istekao ili neispravan — odjavi korisnika
+                    // Token je istekao ili neispravan - odjavi korisnika
                     authService.logout();
                     setUser(null);
                 })
@@ -27,7 +27,7 @@ export function AuthProvider({children}) {
         }
     }, []);
 
-    // Ova funkcija se poziva sa LoginPage — cuva korisnika u state
+    // Ova funkcija se poziva sa LoginPage - cuva korisnika u state
     const login = async (email, password) => {
         await authService.login(email, password);
         const userData = await authService.getMe();
@@ -55,7 +55,7 @@ export function AuthProvider({children}) {
     );
 }
 
-// Custom hook — umesto import { useContext } + import { AuthContext }
+// Custom hook - umesto import { useContext } + import { AuthContext }
 // jednostavno pises: const { user, login, logout } = useAuth();
 export function useAuth() {
     return useContext(AuthContext);

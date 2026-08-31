@@ -12,7 +12,7 @@ import LotDetailPage from "./pages/LotDetailPage.jsx";
 
 export default function App() {
     return (
-        // AuthProvider omota SVE — sva strana aplikacije ima pristup useAuth()
+        // AuthProvider omota SVE - sva strana aplikacije ima pristup useAuth()
         <AuthProvider>
             <BrowserRouter>
                 <div className="app-container">
@@ -21,11 +21,11 @@ export default function App() {
 
                             <Navbar/>
                         <Routes>
-                            {/* Javne rute — bez tokena dostupne */}
+                            {/* Javne rute - bez tokena dostupne */}
                             <Route path="/login" element={<LoginPage/>}/>
                             <Route path="/register" element={<RegisterPage/>}/>
 
-                            {/* Zaštićene rute — PrivateRoute provjeri token */}
+                            {/* Zaštićene rute - PrivateRoute provjeri token */}
                             <Route path="/" element={<PrivateRoute><DashboardPage/></PrivateRoute>}/>
                             <Route path="/lots" element={<PrivateRoute><LotsPage/></PrivateRoute>}/>
                             <Route path="/lots/:id" element={<PrivateRoute><LotDetailPage/></PrivateRoute>}/>

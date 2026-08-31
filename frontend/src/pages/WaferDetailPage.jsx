@@ -61,7 +61,7 @@ export default function WaferDetailPage() {
                 </span>
             </div>
 
-            {/* Defect Form — logs a new defect */}
+            {/* Defect Form - logs a new defect */}
             {/* Forma za prijavljivanje defekta - samo za Admina i Inzenjera */}
             {canEdit && (
                 <DefectForm waferId={parseInt(id)} onDefectLogged={loadData}/>
@@ -72,7 +72,7 @@ export default function WaferDetailPage() {
                      style={{border: '2px solid #dc2626', background: '#fee2e2', marginBottom: '20px'}}>
                     <h3 style={{margin: '0 0 6px', color: '#dc2626'}}>SERIJA AUTOMATSKI ZAUSTAVLJENA (AUTO-HOLD)</h3>
                     <p style={{margin: 0, fontSize: '13px', color: '#7f1d1d'}}>
-                        Yield serije je pao na <strong>{autoHold.yield}%</strong> — ispod LCL granice.
+                        Yield serije je pao na <strong>{autoHold.yield}%</strong> - ispod LCL granice.
                         Status serije je automatski promenjen u <strong>HOLD</strong>.
                     </p>
                     <button className="btn btn-secondary" style={{marginTop: '10px'}}

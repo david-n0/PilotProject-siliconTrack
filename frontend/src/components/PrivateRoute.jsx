@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 export default function PrivateRoute({ children }) {
     const { user, loading } = useAuth();
 
-    // Dok proveravamo token pri startu — ne radi nista
+    // Dok proveravamo token pri startu - ne radi nista
     if (loading) {
         return <div className="card" style={{ textAlign: 'center' }}>Loading...</div>;
     }

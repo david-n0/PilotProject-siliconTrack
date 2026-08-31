@@ -30,7 +30,7 @@ class UpdateLotStatusHandler
         $oldStatus = $lot->getStatus()->value;
         $newStatus = LotStatus::from($command->newStatus);
 
-        // 3. Promeni status / Pravila prelaza su u agregatu — ovde samo orkestracija.
+        // 3. Promeni status / Pravila prelaza su u agregatu - ovde samo orkestracija.
         $lot->changeStatus($newStatus);
 
         // 4. Zabelezi neizmenjiv audit log

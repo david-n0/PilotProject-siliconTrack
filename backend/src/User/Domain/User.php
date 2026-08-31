@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-// UserInterface — Symfony zna da ovo može biti "korisnik sistema"
-// PasswordAuthenticatedUserInterface — Symfony zna da ima lozinku
+// UserInterface - Symfony zna da ovo može biti "korisnik sistema"
+// PasswordAuthenticatedUserInterface - Symfony zna da ima lozinku
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]  // navodnici jer je 'user' rezervisana rec u MySQL
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -24,7 +24,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 100)]
     private string $name;
 
-    // Lozinka se cuva hashirana (bcrypt) — nikada plain text!
+    // Lozinka se cuva hashirana (bcrypt) - nikada plain text!
     //Symfony PasswordHasher pravi npr: $2y$13$xKp... od "password123"
     #[ORM\Column]
     private string $password;
@@ -34,7 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
-    // Private constructor — jedini nacin kreiranja je User::create(...)
+    // Private constructor - jedini nacin kreiranja je User::create(...)
     private function __construct(string $name, string $email, string $hashedPassword, UserRole $role)
     {
         $this->name = $name;
@@ -43,7 +43,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles = [$role->value];
     }
 
-    // Factory metoda — ista DDD logika kao i za Lot/Wafer/Defect
+    // Factory metoda - ista DDD logika kao i za Lot/Wafer/Defect
     public static function create(string $name, string $email, string $hashedPassword, UserRole $role): self
     {
         return new self($name, $email, $hashedPassword, $role);
@@ -64,7 +64,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->name;
     }
 
-    // Symfony trazi ovu metodu — vraca hesovanu lozinku iz baze
+    // Symfony trazi ovu metodu - vraca hesovanu lozinku iz baze
     public function getPassword(): ?string
     {
         return $this->password;
@@ -78,7 +78,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles = [$role->value];
     }
 
-    // Symfony traži ovu metodu — vraća niz uloga
+    // Symfony traži ovu metodu - vraća niz uloga
     // array_unique sprečava duplikate ako 'ROLE_USER' već postoji u nizu
     public function getRoles(): array
     {
@@ -88,14 +88,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
-    // Symfony trazi ovu metodu — brise osetljive podatke iz memorije posle autentifikacije
+    // Symfony trazi ovu metodu - brise osetljive podatke iz memorije posle autentifikacije
     // Mi ne cuvamo plain text lozinku, pa je prazna
     public function eraseCredentials(): void
     {
-        // ništa — ne cuvamo plain text lozinku nigde
+        // ništa - ne cuvamo plain text lozinku nigde
     }
 
-    // Symfony trazi ovu metodu — koja vrednost jednoznačno identifikuje korisnika?
+    // Symfony trazi ovu metodu - koja vrednost jednoznačno identifikuje korisnika?
     // Mi koristimo email (podeseno i u security.yaml)
     public function getUserIdentifier(): string
     {

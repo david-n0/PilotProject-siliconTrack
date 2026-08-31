@@ -2,7 +2,7 @@
 
 namespace App\Lot\Domain;
 
-// Domenski izuzetak — jezik domena, ne jezik PHP-a.
+// Domenski izuzetak - jezik domena, ne jezik PHP-a.
 final class InvalidLotTransitionException extends \DomainException
 {
     public function __construct(LotStatus $from, LotStatus $to)

@@ -5,7 +5,7 @@ namespace App\Lot\Domain;
 use Doctrine\ORM\Mapping as ORM;
 
 
-// LotHistory — Nepromenjivi (Immutable) Audit Trail za promene statusa serije.
+// LotHistory - Nepromenjivi (Immutable) Audit Trail za promene statusa serije.
 // Svaka promena statusa automatski belezi: ko, sta, kada i zašto (note).
 
 #[ORM\Entity]

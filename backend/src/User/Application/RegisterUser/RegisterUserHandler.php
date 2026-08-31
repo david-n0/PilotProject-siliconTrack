@@ -32,7 +32,7 @@ class RegisterUserHandler
         //    (treba mu instancu User-a jer koristi security config za taj tip)
         $tempUser = User::create($command->name, $command->email, '', $role);
 
-        // 4. Hešuj lozinku — bcrypt automatski dodaje "salt" i pravi
+        // 4. Hešuj lozinku - bcrypt automatski dodaje "salt" i pravi
         $hashedPassword = $this->passwordHasher->hashPassword($tempUser, $command->plainPassword);
 
         // 5. Kreiraj pravog korisnika sa hešovanom lozinkom

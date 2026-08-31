@@ -36,7 +36,7 @@ const CustomTooltip = ({active, payload}) => {
         }}>
             <p style={{fontWeight: 700, color: '#0f294a', margin: '0 0 4px'}}>{d.lotNumber}</p>
             <p style={{margin: '2px 0', fontSize: 13, color}}><strong>Yield: {d.yield}%</strong></p>
-            <p style={{margin: '2px 0', fontSize: 12, color: '#64748b'}}>{d.ok} od {d.total} OK — {d.product}</p>
+            <p style={{margin: '2px 0', fontSize: 12, color: '#64748b'}}>{d.ok} od {d.total} OK - {d.product}</p>
             {d.yield < LCL &&
                 <p style={{margin: '4px 0 0', fontSize: 11, color: '#ef4444', fontWeight: 700}}>⚠ ISPOD KONTROLNE
                     GRANICE</p>}
@@ -51,7 +51,7 @@ export default function SpcYieldChart({data = []}) {
         <div className="card">
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px'}}>
                 <div>
-                    <h3 className="card-title" style={{margin: 0}}>SPC Monitoring — Yield po Serijama</h3>
+                    <h3 className="card-title" style={{margin: 0}}>SPC Monitoring - Yield po Serijama</h3>
                     <p style={{fontSize: 12, color: '#64748b', margin: '4px 0 0'}}>
                         Kontrolne granice: UCL = {UCL}% (cilj) &bull; LCL = {LCL}% (alarm)
                     </p>

@@ -39,7 +39,7 @@ class Defect
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $detectedAt;
 
-    // Private constructor — jedini nacin kreiranja je Defect::log(...)
+    // Private constructor - jedini nacin kreiranja je Defect::log(...)
     public function __construct(Wafer $wafer, DefectType $type, DefectSeverity $severity, int $dieRow, int $dieCol, ?string $description)
     {
         $this->wafer = $wafer;

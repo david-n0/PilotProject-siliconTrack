@@ -5,6 +5,7 @@ import {waferService} from '../services/waferService';
 import {defectService} from "../services/defectService.js";
 import {PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend} from 'recharts';
 import SpcYieldChart from "../components/charts/SpcYieldChart.jsx";
+import {formatDateTime} from "../utils/format.js";
 
 const PIE_COLORS = ['#16a34a', '#eab308', '#dc2626'];
 const BAR_COLORS = {
@@ -194,15 +195,15 @@ export default function DashboardPage() {
 
             {/* SPC Control Chart */}
             {!loading && yieldTrend.length > 0 && (
-                <div style={{ marginBottom: '24px' }}>
-                    <SpcYieldChart data={yieldTrend} />
+                <div style={{marginBottom: '24px'}}>
+                    <SpcYieldChart data={yieldTrend}/>
                 </div>
             )}
 
             {/* Grafikoni */}
             {!loading && (pieData.length > 0 || barData.length > 0) && (
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '24px'}}>
-                    {/* Pie Chart — Status Plocica */}
+                    {/* Pie Chart - Status Plocica */}
                     {pieData.length > 0 && (
                         <div className="card">
                             <h3 className="card-title">Status Plocica</h3>
@@ -228,7 +229,7 @@ export default function DashboardPage() {
                             </ResponsiveContainer>
                         </div>
                     )}
-                    {/* Bar Chart — Defekti po tipu */}
+                    {/* Bar Chart - Defekti po tipu */}
                     {barData.length > 0 && (
                         <div className="card">
                             <h3 className="card-title">Defekti po Tipu</h3>
@@ -278,7 +279,7 @@ export default function DashboardPage() {
                                             </span>
                                     </td>
                                     <td style={{color: '#64748b', fontSize: '13px'}}>{h.changedByEmail}</td>
-                                    <td style={{color: '#64748b', fontSize: '13px'}}>{h.changedAt}</td>
+                                    <td style={{color: '#64748b', fontSize: '13px'}}>{formatDateTime(h.changedAt)}</td>
                                     <td style={{color: '#64748b', fontSize: '13px', maxWidth: '200px'}}>
                                         {h.note || '-'}
                                     </td>

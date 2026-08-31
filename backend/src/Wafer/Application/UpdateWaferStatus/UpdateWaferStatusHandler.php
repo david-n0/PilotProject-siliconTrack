@@ -27,7 +27,7 @@ class UpdateWaferStatusHandler
         $wafer->changeStatus($newStatus);
         $this->waferRepository->save($wafer);
 
-        // Ako je plocica vracena u 'ok', yield moze samo da poraste — nema potrebe za proverom.
+        // Ako je plocica vracena u 'ok', yield moze samo da poraste - nema potrebe za proverom.
         if ($newStatus === WaferStatus::Ok) {
             return null;
         }
@@ -35,7 +35,7 @@ class UpdateWaferStatusHandler
         return $this->autoHold->evaluate(
             lotId: $wafer->getLot()->getId(),
             triggeredByEmail: $command->changedByEmail,
-            trigger: sprintf('Rucna promena statusa plocice %s u %s — razlog: %s',
+            trigger: sprintf('Rucna promena statusa plocice %s u %s - razlog: %s',
                 $wafer->getSerialNumber(), $newStatus->value, $command->reason ?? 'nije naveden'),
         );
     }

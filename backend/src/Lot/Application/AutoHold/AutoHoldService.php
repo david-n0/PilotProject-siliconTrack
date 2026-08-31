@@ -29,7 +29,7 @@ final class AutoHoldService
         }
 
         // GUARD 1: samo 'in_production' sme na 'hold' (vidi ALLOWED_TRANSITIONS).
-        // Ovo ujedno resava i idempotenciju — vec zaustavljenu seriju ne diramo ponovo.
+        // Ovo ujedno resava i idempotenciju - vec zaustavljenu seriju ne diramo ponovo.
         if ($lot->getStatus() !== LotStatus::InProduction) {
             return null;
         }
@@ -49,7 +49,7 @@ final class AutoHoldService
             $yield, YieldPolicy::LCL, $ok, $total, $trigger, $triggeredByEmail
         );
 
-        // Idemo kroz postojeci handler — tako tranzicije i audit ostaju na jednom mestu.
+        // Idemo kroz postojeci handler - tako tranzicije i audit ostaju na jednom mestu.
         $this->updateLotStatus->handle(new UpdateLotStatusCommand(
             lotId: $lotId,
             newStatus: LotStatus::Hold->value,

@@ -19,7 +19,6 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Config\Doctrine\Orm\EntityManagerConfig;
 
 #[Route('/api/lots')]
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 class LotController extends AbstractController
 {
     #[Route('', methods: ['GET'])]
@@ -33,8 +32,8 @@ class LotController extends AbstractController
             'waferCount' => $lot->getWaferCount(),
             'createdBy' => $lot->getCreatedBy(),
             'status' => $lot->getStatus()->value,
-            'startedAt' => $lot->getStartedAt()->format('H:i d-m-Y'),
-            'completedAt' => $lot->getCompletedAt()?->format('H:i d-m-Y'),
+            'startedAt' => $lot->getStartedAt()->format(DATE_ATOM),
+            'completedAt' => $lot->getCompletedAt()?->format(DATE_ATOM),
             'allowedNext' => array_map(fn($s) => $s->value, $lot->getStatus()->allowedTransitions()),
         ], $lots);
 
@@ -45,14 +44,18 @@ class LotController extends AbstractController
     public function create(Request $request, CreateLotHandler $handler): JsonResponse
     {
         $body = json_decode($request->getContent(), true);
-        $handler->handle(new CreateLotCommand(
-            $body['lotNumber'] ?? '',
-            $body['product'] ?? '',
-            $body['waferCount'] ?? 0,
-            $this->getUser()?->getUserIdentifier() ?? 'system',
-        ));
+        try {
+            $handler->handle(new CreateLotCommand(
+                $body['lotNumber'] ?? '',
+                $body['product'] ?? '',
+                $body['waferCount'] ?? 0,
+                $this->getUser()?->getUserIdentifier() ?? 'system',
+            ));
+            return $this->json(['message' => 'Lot created'], Response::HTTP_CREATED);
+        } catch (\InvalidArgumentException|\DomainException $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
 
-        return $this->json(['message' => 'Lot created'], Response::HTTP_CREATED);
     }
 
     #[Route('/{id}', methods: ['GET'])]
@@ -70,8 +73,8 @@ class LotController extends AbstractController
             'waferCount' => $lot->getWaferCount(),
             'createdBy' => $lot->getCreatedBy(),
             'status' => $lot->getStatus()->value,
-            'startedAt' => $lot->getStartedAt()->format('H:i d-m-Y'),
-            'completedAt' => $lot->getCompletedAt()?->format('H:i d-m-Y'),
+            'startedAt' => $lot->getStartedAt()->format(DATE_ATOM),
+            'completedAt' => $lot->getCompletedAt()?->format(DATE_ATOM),
             'allowedNext' => array_map(fn($s) => $s->value, $lot->getStatus()->allowedTransitions()),
         ]);
     }
@@ -97,7 +100,7 @@ class LotController extends AbstractController
         }
     }
 
-    // GET /api/lots/{id}/history — dohvati sve revizorske zapise za ovaj Lot
+    // GET /api/lots/{id}/history - dohvati sve revizorske zapise za ovaj Lot
     #[Route('/{id}/history', methods: ['GET'])]
     public function history(int $id, LotRepositoryInterface $repo): JsonResponse
     {
@@ -107,13 +110,13 @@ class LotController extends AbstractController
             'fromStatus' => $h->getFromStatus(),
             'toStatus' => $h->getToStatus(),
             'changedByEmail' => $h->getChangedByEmail(),
-            'changedAt' => $h->getChangedAt()->format('H:i d-m-Y'),
+            'changedAt' => $h->getChangedAt()->format(DATE_ATOM),
             'note' => $h->getNote(),
         ], $entries);
         return $this->json($data);
     }
 
-    // GET /api/lots/analytics/yield-trend — Yield po svakom lotu za SPC grafikon
+    // GET /api/lots/analytics/yield-trend - Yield po svakom lotu za SPC grafikon
     #[Route('/analytics/yield-trend', methods: ['GET'])]
     public function yieldTrend(LotRepositoryInterface $lotRepo, WaferRepositoryInterface $waferRepo): JsonResponse
     {

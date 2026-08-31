@@ -19,7 +19,7 @@ export const authService = {
         if (!res.ok) {
             throw new Error(data.message || 'Login failed. Check your credentials.');
         }
-        // Token čuvamo u localStorage — ostaje i posle refresh-a stranice
+        // Token čuvamo u localStorage - ostaje i posle refresh-a stranice
         localStorage.setItem('jwt_token', data.token);
         return data.token;
 
@@ -40,7 +40,7 @@ export const authService = {
         if (!res.ok) throw new Error(data.message || 'Google prijava nije uspela.');
 
         localStorage.setItem('jwt_token', data.token);
-        await signOut(auth);   // Firebase sesija nam vise ne treba — imamo svoj token
+        await signOut(auth);   // Firebase sesija nam vise ne treba - imamo svoj token
         return data.token;
     },
 
@@ -60,7 +60,7 @@ export const authService = {
         return data;
     },
 
-    // Brise token — korisnik je odjavljen
+    // Brise token - korisnik je odjavljen
     async logout() {
         localStorage.removeItem('jwt_token');
     },

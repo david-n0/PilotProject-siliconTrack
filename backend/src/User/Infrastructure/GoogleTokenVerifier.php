@@ -57,7 +57,7 @@ final class GoogleTokenVerifier
     /** @return array<string, Key> kid => javni kljuc */
     private function publicKeys(): array
     {
-        // Google rotira kljuceve otprilike dnevno — kesiramo ih na sat vremena.
+        // Google rotira kljuceve otprilike dnevno - kesiramo ih na sat vremena.
         $certs = $this->cache->get('google_secure_token_certs', function (ItemInterface $item): array {
             $item->expiresAfter(3600);
             return $this->http->request('GET', self::CERTS_URL)->toArray();

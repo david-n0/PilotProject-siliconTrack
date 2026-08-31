@@ -40,8 +40,9 @@ export const lotService = {
             body: JSON.stringify(lotData),
         });
 
-        if (!response.ok) throw new Error('Neuspešno kreiranje Lot-a');
-        return response.json();
+        const json = await response.json();
+        if (!response.ok) throw new Error(json.error || 'Neuspešno kreiranje Lot-a');
+        return json;
     },
 
     // Dohvatanje Yield trenda po lotovima (za SPC grafikon)

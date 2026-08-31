@@ -3,6 +3,7 @@ import {useParams, useNavigate} from 'react-router-dom';
 import {lotService} from '../services/lotService.js';
 import {waferService} from '../services/waferService.js';
 import {useAuth} from '../context/AuthContext.jsx';
+import {formatDateTime} from "../utils/format.js";
 
 const STATUS_LABELS = {
     pending: 'PENDING (Na cekanju)',
@@ -131,7 +132,7 @@ export default function LotDetailPage() {
                     <div>
                         <h1 className="page-title" style={{margin: 0}}>Serija: {lot.lotNumber}</h1>
                         <p className="page-subtitle" style={{margin: '4px 0 0'}}>
-                            Proizvod: <strong>{lot.product}</strong> &bull; Pokrenuto: {lot.startedAt}
+                            Proizvod: <strong>{lot.product}</strong> &bull; Pokrenuto: {formatDateTime(lot.startedAt)} &bull; Kreirao: {lot.createdBy || '-'}
                         </p>
                     </div>
                 </div>
@@ -218,7 +219,7 @@ export default function LotDetailPage() {
                 </div>
             )}
 
-            {/* Finalni status — nema dalje */}
+            {/* Finalni status - nema dalje */}
             {isFinished && (
                 <div className="card"
                      style={{border: '2px solid ' + (lot.status === 'completed' ? '#16a34a' : '#dc2626')}}>
@@ -283,7 +284,7 @@ export default function LotDetailPage() {
                                             margin: '2px 0',
                                             fontSize: '11px',
                                             color: '#94a3b8'
-                                        }}>{h.changedAt}</p>
+                                        }}>{formatDateTime(h.changedAt)}</p>
                                         {h.note && (
                                             <p style={{
                                                 margin: '6px 0 0',
@@ -329,7 +330,7 @@ export default function LotDetailPage() {
                                         <td>#{w.position}</td>
                                         <td><span className={`badge badge-${w.status}`}>{w.status.toUpperCase()}</span>
                                         </td>
-                                        <td style={{color: '#64748b', fontSize: '13px'}}>{w.createdAt}</td>
+                                        <td style={{color: '#64748b', fontSize: '13px'}}>{formatDateTime(w.createdAt)}</td>
                                         <td style={{textAlign: 'right'}}>
                                             <button onClick={() => navigate(`/wafers/${w.id}`)}
                                                     className="btn btn-secondary"

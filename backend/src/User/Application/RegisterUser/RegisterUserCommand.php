@@ -2,7 +2,7 @@
 
 namespace App\User\Application\RegisterUser;
 
-// Command je samo "data container" — nema logike, samo drzi podatke
+// Command je samo "data container" - nema logike, samo drzi podatke
 // Handler ce uzeti ove podatke i obaviti posao
 class RegisterUserCommand
 {

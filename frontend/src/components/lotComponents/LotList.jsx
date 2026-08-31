@@ -1,26 +1,34 @@
 import {lotService} from "../../services/lotService.js";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../context/AuthContext.jsx";
+import {formatDateTime} from "../../utils/format.js";
+import {useState} from "react";
+import ConfirmModal from "../ConfirmModal.jsx";
 
 export default function LotList({lots, onLotDeleted}) {
+    const [pendingId, setPendingId] = useState(null);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    const handleDelete = async (id) => {
-        if (window.confirm('Da li ste sigurni da želite obrisati ovaj Lot?')) {
-            try {
-                await lotService.delete(id);
-                onLotDeleted(); // Osvežavamo listu
-            } catch (err) {
-                alert(err.message);
-            }
+    const confirmDelete = async () => {
+        try {
+            await lotService.delete(pendingId);
+            setPendingId(null);
+            onLotDeleted(); // Osvežavamo listu
+        } catch (err) {
+            setPendingId(null);
+            setError(err.message);
         }
     };
 
-    const { user } = useAuth();
+    const {user} = useAuth();
     const isAdmin = user?.roles?.includes('ROLE_ADMIN');
 
     return (
         <div className="table-responsive">
+
+            {error && <div className="alert-error">{error}</div>}
+
             <table className="table-custom">
                 <thead>
                 <tr>
@@ -46,7 +54,7 @@ export default function LotList({lots, onLotDeleted}) {
                                     {lot.status.replace('_', ' ').toUpperCase()}
                                 </span>
                             </td>
-                            <td style={{color: '#64748b',}}>{lot.startedAt}</td>
+                            <td style={{color: '#64748b',}}>{formatDateTime(lot.startedAt)}</td>
 
                             <td style={{textAlign: 'right'}}>
                                 <button onClick={() => navigate(`/lots/${lot.id}`)} className="btn btn-secondary"
@@ -54,7 +62,7 @@ export default function LotList({lots, onLotDeleted}) {
                                     Detalji →
                                 </button>
 
-                                {isAdmin && (<button onClick={() => handleDelete(lot.id)} className="btn btn-danger">
+                                {isAdmin && (<button onClick={() => setPendingId(lot.id)} className="btn btn-danger">
                                     Obriši
                                 </button>)}
                             </td>
@@ -69,6 +77,15 @@ export default function LotList({lots, onLotDeleted}) {
                 )}
                 </tbody>
             </table>
+
+            <ConfirmModal
+                isOpen={pendingId !== null}
+                title="Brisanje serije"
+                message="Ova serija će biti trajno obrisana. Nastaviti?"
+                confirmLabel="Obriši"
+                onClose={() => setPendingId(null)}
+                onConfirm={confirmDelete}
+            />
 
         </div>
     );

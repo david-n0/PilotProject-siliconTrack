@@ -117,8 +117,8 @@ export default function WaferDefectMap({defects = []}) {
                                 >
                                     <title>
                                         {defect
-                                            ? `Die [${row}, ${col}] — ${defect.type.toUpperCase()} (${defect.severity}) — ${defect.description || ''}`
-                                            : `Die [${row}, ${col}] — OK`
+                                            ? `Die [${row}, ${col}] - ${defect.type.toUpperCase()} (${defect.severity}) - ${defect.description || ''}`
+                                            : `Die [${row}, ${col}] - OK`
                                         }
                                     </title>
                                 </rect>
@@ -135,8 +135,8 @@ export default function WaferDefectMap({defects = []}) {
 
             <p style={{textAlign: 'center', fontSize: '13px', color: '#64748b', marginTop: '10px'}}>
                 {defectDies > 0
-                    ? `${defectDies} defektnih die pozicija od ukupno ${totalDies} — Die Yield: ${((goodDies / totalDies) * 100).toFixed(1)}%`
-                    : `Svih ${totalDies} die pozicija ispravno — Die Yield: 100%`
+                    ? `${defectDies} defektnih die pozicija od ukupno ${totalDies} - Die Yield: ${((goodDies / totalDies) * 100).toFixed(1)}%`
+                    : `Svih ${totalDies} die pozicija ispravno - Die Yield: 100%`
                 }
             </p>
         </div>

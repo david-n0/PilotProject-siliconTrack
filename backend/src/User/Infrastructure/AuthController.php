@@ -58,7 +58,7 @@ class AuthController extends AbstractController
     public function register(Request $request, RegisterUserHandler $handler): JsonResponse
     {
         $body = json_decode($request->getContent(), true);
-        // Osnovna validacija — provjeri da li su prisutna obavezna polja
+        // Osnovna validacija - provjeri da li su prisutna obavezna polja
         if (empty($body['email']) || empty($body['name']) || empty($body['password'])) {
             return $this->json(
                 ['error' => 'Fields email, name and password are required.'],
@@ -89,7 +89,7 @@ class AuthController extends AbstractController
     #[Route('/me', methods: ['GET'])]
     public function me(): JsonResponse
     {
-        // $this->getUser() dolazi od Symfony Security — čita korisnika iz JWT tokena
+        // $this->getUser() dolazi od Symfony Security - čita korisnika iz JWT tokena
         /** @var \App\User\Domain\User $user */
         $user = $this->getUser();
         return $this->json([

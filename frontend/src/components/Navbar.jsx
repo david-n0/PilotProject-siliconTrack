@@ -30,7 +30,7 @@ export default function Navbar() {
                 <div className="navbar-user-section">
                     <div className="user-profile-info">
                         <span className="user-name">{user.name}</span>
-                        <br></br>
+
                         <span className="user-role-tag">{getRoleBadge()}</span>
                     </div>
                     <button onClick={handleLogout} className="btn btn-danger ">

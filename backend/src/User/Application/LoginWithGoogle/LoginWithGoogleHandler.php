@@ -44,7 +44,7 @@ final class LoginWithGoogleHandler
             return $user;
         }
 
-        // Prva prijava — lozinka je nasumicna, na ovaj nalog se ulazi samo preko Google-a.
+        // Prva prijava - lozinka je nasumicna, na ovaj nalog se ulazi samo preko Google-a.
         $temp = User::create($profile['name'], $email, '', $defaultRole);
         $randomHash = $this->hasher->hashPassword($temp, bin2hex(random_bytes(32)));
 

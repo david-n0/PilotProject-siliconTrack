@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api')]
 class DefectController extends AbstractController
 {
-    // GET /api/defects — svi defekti u sistemu
+    // GET /api/defects - svi defekti u sistemu
     #[Route('/defects', methods: ['GET'])]
     public function index(DefectRepositoryInterface $repo): JsonResponse
     {
@@ -32,13 +32,13 @@ class DefectController extends AbstractController
             'dieRow' => $d->getDieRow(),
             'dieCol' => $d->getDieCol(),
             'description' => $d->getDescription(),
-            'detectedAt' => $d->getDetectedAt()->format('H:i d-m-Y'),
+            'detectedAt' => $d->getDetectedAt()->format(DATE_ATOM),
         ], $defects);
 
         return $this->json($data);
     }
 
-    // GET /api/wafers/{waferId}/defects — svi defekti za jednu plocicu
+    // GET /api/wafers/{waferId}/defects - svi defekti za jednu plocicu
     #[Route('/wafers/{waferId}/defects', methods: ['GET'])]
     public function getByWafer(int $waferId, DefectRepositoryInterface $repo): JsonResponse
     {
@@ -54,13 +54,13 @@ class DefectController extends AbstractController
             'dieRow' => $d->getDieRow(),
             'dieCol' => $d->getDieCol(),
             'description' => $d->getDescription(),
-            'detectedAt' => $d->getDetectedAt()->format('H:i d-m-Y'),
+            'detectedAt' => $d->getDetectedAt()->format(DATE_ATOM),
         ], $defects);
 
         return $this->json($data);
     }
 
-    // POST /api/defects — zabeleži novi defekt
+    // POST /api/defects - zabeleži novi defekt
     #[Route('/defects', methods: ['POST'])]
     public function log(Request $request, LogDefectHandler $handler): JsonResponse
     {
@@ -93,7 +93,7 @@ class DefectController extends AbstractController
         }
     }
 
-    // DELETE /api/defects/{id} — obriši defekt
+    // DELETE /api/defects/{id} - obriši defekt
     #[Route('/defects/{id}', methods: ['DELETE'])]
     public function delete(int $id, DefectRepositoryInterface $repo, EntityManagerInterface $em): JsonResponse
     {

@@ -1,5 +1,8 @@
+import {useState} from 'react';
 import {defectService} from '../../services/defectService.js';
 import {useAuth} from "../../context/AuthContext.jsx";
+import {formatDateTime} from '../../utils/format.js';
+import ConfirmModal from "../ConfirmModal.jsx";
 
 // minor → green (badge-ok), major → yellow (badge-defective), critical → red (badge-rejected)
 const severityClass = {
@@ -9,14 +12,20 @@ const severityClass = {
 };
 
 export default function DefectList({defects, onRefresh}) {
-    const handleDelete = async (id) => {
-        if (window.confirm('Obrisati ovaj defekt?')) {
-            try {
-                await defectService.delete(id);
-                onRefresh();
-            } catch (err) {
-                alert(err.message);
-            }
+    const {user} = useAuth();
+    const [pendingId, setPendingId] = useState(null);
+    const [error, setError] = useState(null);
+
+    const isAdmin = user?.roles?.includes('ROLE_ADMIN');
+
+    const confirmDelete = async () => {
+        try {
+            await defectService.delete(pendingId);
+            setPendingId(null);
+            onRefresh();
+        } catch (err) {
+            setPendingId(null);
+            setError(err.message);
         }
     };
 
@@ -24,11 +33,11 @@ export default function DefectList({defects, onRefresh}) {
         return <div className="empty-state">Nema zabeleženih defekata za ovu pločicu.</div>;
     }
 
-    const {user} = useAuth();
-    const isAdmin = user?.roles?.includes('ROLE_ADMIN');
-
     return (
         <div className="table-responsive">
+
+            {error && <div className="alert-error">{error}</div>}
+
             <table className="table-custom">
                 <thead>
                 <tr>
@@ -50,13 +59,13 @@ export default function DefectList({defects, onRefresh}) {
                                     {d.severity.toUpperCase()}
                                 </span>
                         </td>
-                        <td style={{color: '#64748b', maxWidth: '200px'}}>{d.description || '—'}
+                        <td style={{color: '#64748b', maxWidth: '200px'}}>{d.description || '-'}
                         </td>
-                        <td style={{color: '#64748b'}}>{d.detectedAt}</td>
+                        <td style={{color: '#64748b'}}>{formatDateTime(d.detectedAt)}</td>
                         <td style={{textAlign: 'right'}}>
                             {/* Samo Admin moze brisati defekte */}
                             {isAdmin && (
-                                <button onClick={() => handleDelete(d.id)} className="btn btn-danger">
+                                <button onClick={() => setPendingId(d.id)} className="btn btn-danger">
                                     Obriši
                                 </button>
                             )}
@@ -65,6 +74,16 @@ export default function DefectList({defects, onRefresh}) {
                 ))}
                 </tbody>
             </table>
+
+            <ConfirmModal
+                isOpen={pendingId !== null}
+                title="Brisanje defekta"
+                message="Ovaj defekt će biti trajno obrisan. Nastaviti?"
+                confirmLabel="Obriši"
+                onClose={() => setPendingId(null)}
+                onConfirm={confirmDelete}
+            />
+
         </div>
     );
 }
