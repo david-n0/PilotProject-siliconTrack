@@ -49,11 +49,11 @@ export default function DefectForm({waferId, onDefectLogged}) {
                     <div className="form-group">
                         <label className="form-label">Tip defekta</label>
                         <select name="type" value={form.type} onChange={handleChange} className="select-control">
-                            <option value="scratch">Scratch — ogrebotina</option>
-                            <option value="crack">Crack — pukotina</option>
-                            <option value="contamination">Contamination — kontaminacija</option>
-                            <option value="particle">Particle — čestica</option>
-                            <option value="other">Other — ostalo</option>
+                            <option value="scratch">Scratch - ogrebotina</option>
+                            <option value="crack">Crack - pukotina</option>
+                            <option value="contamination">Contamination - kontaminacija</option>
+                            <option value="particle">Particle - čestica</option>
+                            <option value="other">Other - ostalo</option>
                         </select>
                     </div>
 
@@ -61,9 +61,9 @@ export default function DefectForm({waferId, onDefectLogged}) {
                         <label className="form-label">Ozbiljnost</label>
                         <select name="severity" value={form.severity} onChange={handleChange}
                                 className="select-control">
-                            <option value="minor">Minor — nizak rizik</option>
-                            <option value="major">Major — srednji rizik</option>
-                            <option value="critical">Critical — kritičan kvar</option>
+                            <option value="minor">Minor - nizak rizik</option>
+                            <option value="major">Major - srednji rizik</option>
+                            <option value="critical">Critical - kritičan kvar</option>
                         </select>
                     </div>
 
@@ -88,7 +88,7 @@ export default function DefectForm({waferId, onDefectLogged}) {
                                placeholder="Npr. vidljiva ogrebotina blizu ivice pločice"
                                required/>
                         <span className="field-hint">
-                            Koordinate se odnose na die mapu 21×21 (0–20). Obavezno uz svaki nalaz — ulazi u audit zapis.
+                            Koordinate se odnose na die mapu 21×21 (0–20). Obavezno uz svaki nalaz - ulazi u audit zapis.
                         </span>
                     </div>
 

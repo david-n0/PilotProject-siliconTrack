@@ -213,17 +213,6 @@ body {
     order: 0;
 }
 
-/* Yield ide sam, preko cele sirine, ispod ostalih */
-.stat-card-yield {
-    grid-column: 1 / -1;
-    order: 2;
-}
-
-.stat-card-yield .stat-card-value {
-    font-size: 42px;
-    letter-spacing: -1px;
-}
-
 @media (max-width: 1200px) {
     .stats-grid, .stats-grid-5 { grid-template-columns: repeat(3, 1fr); }
 }
@@ -592,7 +581,8 @@ body {
 
 /* Yield Kartica */
 .stat-card-yield {
-    grid-column: span 2;
+    grid-column: 1 / -1;
+    order: 2;
     padding: 18px 20px;
     border-radius: 10px;
     border: 1px solid #e0f2fe;
@@ -603,9 +593,6 @@ body {
 }
 
 .stat-card-yield .stat-card-value { font-size: 46px; letter-spacing: -1.5px; }
-
-@media (max-width: 820px) { .stat-card-yield { grid-column: span 2; } }
-@media (max-width: 520px) { .stat-card-yield { grid-column: span 1; } }
 
 /* 1. Optimalno (>= 90%) -> Zelena */
 .stat-card-yield-optimal {
@@ -650,12 +637,13 @@ body {
 }
 
 .yield-progress-track {
+    position: relative;
     width: 100%;
-    height: 7px;
+    height: 10px;
     background: rgba(0, 0, 0, 0.08);
     border-radius: 10px;
-    overflow: hidden;
     margin-top: 8px;
+    margin-bottom: 22px;
 }
 
 .yield-progress-fill {
@@ -663,6 +651,30 @@ body {
     border-radius: 10px;
     transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+.yield-limit {
+    position: absolute;
+    top: -4px;
+    width: 2px;
+    height: 18px;
+    background: #94a3b8;
+    border-radius: 1px;
+}
+
+.yield-limit small {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    color: #94a3b8;
+    white-space: nowrap;
+}
+
+/* Crvena granica koja pokrece Auto-Hold */
+.yield-limit-lcl { background: #fca5a5; }
+.yield-limit-lcl small { color: #dc2626; }
 
 /*  Defekti i Obaveštenja */
 .defect-item-card {
@@ -699,7 +711,6 @@ body {
     .defect-form-top    { grid-template-columns: 1fr 1fr; }
     .defect-form-bottom { grid-template-columns: 1fr; }
 }
-
 
 .btn-google {
     width: 100%;

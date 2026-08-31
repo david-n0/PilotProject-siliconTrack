@@ -158,6 +158,8 @@ export default function LotDetailPage() {
                             <div className="yield-progress-track">
                                 <div className="yield-progress-fill"
                                      style={{width: `${Math.min(yieldNum, 100)}%`, backgroundColor: yieldMeta.color}}/>
+                                <span className="yield-limit yield-limit-lcl" style={{left: '75%'}}><small>LCL 75%</small></span>
+                                <span className="yield-limit" style={{left: '95%'}}><small>UCL 95%</small></span>
                             </div>
                             <span style={{fontSize: '11px', color: '#64748b', marginTop: '4px'}}>
                                 {okWafers} od {wafers.length} plocica ispravno

@@ -139,6 +139,24 @@ export default function DashboardPage() {
                 <p className="page-subtitle">Kliknite na bilo koju karticu za direktan pregled podataka</p>
             </div>
             <div className="stats-grid stats-grid-5">
+
+                {heldLots.length > 0 && (
+                    <div className="stat-card stat-card-hold">
+                        <span className="hold-count">{lots.filter(l => l.status === 'hold').length}</span>
+                        <div>
+                            <p className="stat-card-title" style={{margin: 0, color: '#b91c1c'}}>Serije na HOLD-u</p>
+                            <p style={{fontSize: '13px', color: '#7f1d1d', margin: '6px 0 0'}}>
+                                Zaustavljene automatskom SPC kontrolom - čekaju inženjersku proveru.
+                            </p>
+                        </div>
+                        <div className="hold-lots">
+                            {lots.filter(l => l.status === 'hold').map(l => (
+                                <button key={l.id} onClick={() => navigate(`/lots/${l.id}`)}>{l.lotNumber}</button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
                 {/* Yield */}
                 <div className={`stat-card stat-card-yield ${yieldMeta.cssClass}`}>
                     <div className="yield-header">
@@ -156,7 +174,10 @@ export default function DashboardPage() {
                             className="yield-progress-fill"
                             style={{width: `${Math.min(yieldNum, 100)}%`, backgroundColor: yieldMeta.color}}
                         />
+                        <span className="yield-limit yield-limit-lcl" style={{left: '75%'}}><small>LCL 75%</small></span>
+                        <span className="yield-limit" style={{left: '95%'}}><small>UCL 95%</small></span>
                     </div>
+                   
                     {wafers.length > 0 && (
                         <span style={{fontSize: '11px', color: '#64748b', marginTop: '4px'}}>
                             {okWafers} od {wafers.length} pločica ispravno
@@ -166,23 +187,6 @@ export default function DashboardPage() {
                         {yieldMeta.hint}
                     </span>
                 </div>
-
-                {heldLots.length > 0 && (
-                    <div className="stat-card stat-card-hold">
-                        <span className="hold-count">{lots.filter(l => l.status === 'hold').length}</span>
-                        <div>
-                            <p className="stat-card-title" style={{margin: 0, color: '#b91c1c'}}>Serije na HOLD-u</p>
-                            <p style={{fontSize: '13px', color: '#7f1d1d', margin: '6px 0 0'}}>
-                                Zaustavljene automatskom SPC kontrolom — čekaju inženjersku proveru.
-                            </p>
-                        </div>
-                        <div className="hold-lots">
-                            {lots.filter(l => l.status === 'hold').map(l => (
-                                <button key={l.id} onClick={() => navigate(`/lots/${l.id}`)}>{l.lotNumber}</button>
-                            ))}
-                        </div>
-                    </div>
-                )}
 
                     <div onClick={() => navigate('/lots')} className="stat-card stat-card-blue">
                         <div className="stat-card-title">Ukupno Serija (Lots)</div>
