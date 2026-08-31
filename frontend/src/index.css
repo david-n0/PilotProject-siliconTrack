@@ -80,7 +80,7 @@ body {
 .navbar-top {
     background: #ffffff;
     padding: 12px 24px;
-    border-radius: 18px;
+    border-radius: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -121,7 +121,7 @@ body {
     background: #e0f2fe;
     color: #0369a1;
     padding: 3px 10px;
-    border-radius: 12px;
+    border-radius: 8px;
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
@@ -137,7 +137,7 @@ body {
 .navbar-sub {
     background: #ffffff;
     padding: 6px 10px;
-    border-radius: 14px;
+    border-radius: 10px;
     display: flex;
     gap: 8px;
     width: fit-content;
@@ -147,10 +147,10 @@ body {
 
 .subnav-link {
     padding: 8px 18px;
-    border-radius: 10px;
+    border-radius: 8px;
     text-decoration: none;
     font-weight: 600;
-    font-size: 13.5px;
+    font-size: 14px;
     color: #0369a1;
     transition: all 0.2s ease;
 }
@@ -177,26 +177,67 @@ body {
 }
 
 .card-title {
-    margin: 0 0 16px 0;
-    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 17px;
     font-weight: 700;
     color: #0f294a;
+    margin-bottom: 18px;
+}
+.card-title::before {
+    content: '';
+    width: 4px;
+    height: 16px;
+    border-radius: 2px;
+    background: #0284c7;
+    flex: none;
 }
 
 /* Dashboard Stat Kartice */
 .stats-grid {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
-    flex-wrap: wrap;
     margin-bottom: 30px;
 }
 
+/* Dashboard ima pet kartica */
+.stats-grid-5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+/* Hold ide na vrh, preko cele sirine */
+.stat-card-hold {
+    grid-column: 1 / -1;
+    order: 0;
+}
+
+/* Yield ide sam, preko cele sirine, ispod ostalih */
+.stat-card-yield {
+    grid-column: 1 / -1;
+    order: 2;
+}
+
+.stat-card-yield .stat-card-value {
+    font-size: 42px;
+    letter-spacing: -1px;
+}
+
+@media (max-width: 1200px) {
+    .stats-grid, .stats-grid-5 { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 900px) {
+    .stats-grid, .stats-grid-5 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px) {
+    .stats-grid, .stats-grid-5 { grid-template-columns: 1fr; }
+}
 .stat-card {
     background: #ffffff;
     padding: 20px;
-    border-radius: 18px;
-    box-shadow: 0 8px 20px rgba(186, 230, 253, 0.4);
-    flex: 1;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(15, 37, 68, .06);
     min-width: 170px;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -204,7 +245,7 @@ body {
 
 .stat-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 25px rgba(186, 230, 253, 0.7);
+    box-shadow: 0 10px 22px rgba(186, 230, 253, .55);
 }
 
 .stat-card-title {
@@ -278,7 +319,7 @@ body {
 .input-control, .select-control {
     width: 100%;
     padding: 10px 14px;
-    border-radius: 12px;
+    border-radius: 8px;
     border: 1.5px solid #cbd5e1;
     background: #f8fafc;
     outline: none;
@@ -295,7 +336,7 @@ body {
     background: #fee2e2;
     color: #b91c1c;
     padding: 10px 14px;
-    border-radius: 12px;
+    border-radius: 8px;
     margin-bottom: 16px;
     font-size: 14px;
 }
@@ -321,21 +362,21 @@ body {
     color: #ffffff;
     box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
     padding: 11px 20px;
-    border-radius: 12px;
+    border-radius: 8px;
 }
 
 .btn-secondary {
     background: #e0f2fe;
     color: #0369a1;
     padding: 11px 20px;
-    border-radius: 12px;
+    border-radius: 8px;
 }
 
 .btn-danger {
     background: #fee2e2;
     color: #ef4444;
     padding: 11px 20px;
-    border-radius: 12px;
+    border-radius: 8px;
 }
 
 /* Tabele */
@@ -368,7 +409,7 @@ body {
 }
 
 .table-custom td:first-child {
-    border-radius: 14px 0 0 14px;
+    border-radius: 10px 0 0 14px;
 }
 
 .table-custom td:last-child {
@@ -379,7 +420,7 @@ body {
     text-align: center;
     padding: 40px 20px;
     background: #f8fafc;
-    border-radius: 14px;
+    border-radius: 10px;
     border: 1px dashed #cbd5e1;
     color: #64748b;
 }
@@ -387,7 +428,7 @@ body {
 /* Statusi (Badges) */
 .badge {
     padding: 4px 12px;
-    border-radius: 16px;
+    border-radius: 10px;
     font-size: 12px;
     font-weight: 700;
     display: inline-block;
@@ -491,16 +532,80 @@ body {
     padding: 10px 14px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
+/* SPC */
+.alert-strip {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 14px; flex-wrap: wrap;
+    background: #fef2f2; border: 2px solid #fecaca;
+    border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; color: #7f1d1d;
+}
+.chip-danger {
+    background: #fff; border: 1px solid #fecaca; color: #dc2626;
+    border-radius: 999px; padding: 5px 12px; font-weight: 700; font-size: 12px; cursor: pointer;
+}
+.chip-danger:hover { background: #fef2f2; }
+
+
+/* Hold kartica */
+.stat-card-hold {
+    grid-column: 1 / -1;
+    order: 0;
+    border: 3px solid #fecaca;
+    background: #fef2f2;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.hold-count {
+    font-size: 34px;
+    font-weight: 800;
+    color: #dc2626;
+    line-height: 1;
+}
+
+.hold-lots {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+.hold-lots button {
+    background: #ffffff;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.hold-lots button:hover {
+    background: #fee2e2;
+    transform: translateY(-1px);
+}
 
 /* Yield Kartica */
 .stat-card-yield {
+    grid-column: span 2;
     padding: 18px 20px;
-    border-radius: 16px;
+    border-radius: 10px;
+    border: 1px solid #e0f2fe;
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
+
+.stat-card-yield .stat-card-value { font-size: 46px; letter-spacing: -1.5px; }
+
+@media (max-width: 820px) { .stat-card-yield { grid-column: span 2; } }
+@media (max-width: 520px) { .stat-card-yield { grid-column: span 1; } }
 
 /* 1. Optimalno (>= 90%) -> Zelena */
 .stat-card-yield-optimal {
@@ -563,7 +668,7 @@ body {
 .defect-item-card {
     background: #ffffff;
     border: 1.5px solid #e2e8f0;
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 14px 18px;
     margin-bottom: 12px;
     display: flex;
@@ -575,6 +680,26 @@ body {
 .defect-item-card:hover {
     border-color: #cbd5e1;
 }
+
+.defect-form-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr 90px 90px;
+    gap: 14px;
+}
+.defect-form-bottom {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 14px;
+    align-items: center;
+    margin-top: 14px;
+}
+.field-hint { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+
+@media (max-width: 860px) {
+    .defect-form-top    { grid-template-columns: 1fr 1fr; }
+    .defect-form-bottom { grid-template-columns: 1fr; }
+}
+
 
 .btn-google {
     width: 100%;

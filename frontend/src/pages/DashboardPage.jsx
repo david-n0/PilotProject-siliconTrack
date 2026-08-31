@@ -25,6 +25,8 @@ export default function DashboardPage() {
     const [yieldTrend, setYieldTrend] = useState([]);
     const navigate = useNavigate(); // Zbog navigate()
 
+    const heldLots = lots.filter(l => l.status === 'hold');
+
     useEffect(() => {
         const loadStats = async () => {
             try {
@@ -136,7 +138,7 @@ export default function DashboardPage() {
                 <h2 className="page-title">Pregled Proizvodnje</h2>
                 <p className="page-subtitle">Kliknite na bilo koju karticu za direktan pregled podataka</p>
             </div>
-            <div className="stats-grid">
+            <div className="stats-grid stats-grid-5">
                 {/* Yield */}
                 <div className={`stat-card stat-card-yield ${yieldMeta.cssClass}`}>
                     <div className="yield-header">
@@ -164,32 +166,53 @@ export default function DashboardPage() {
                         {yieldMeta.hint}
                     </span>
                 </div>
-                <div onClick={() => navigate('/lots')} className="stat-card stat-card-blue">
-                    <div className="stat-card-title">Ukupno Serija (Lots)</div>
-                    <div className="stat-card-value" style={{color: '#0284c7'}}>{loading ? '...' : lots.length}</div>
-                    <div className="stat-card-hint">Pregled serija</div>
-                </div>
-                <div onClick={() => navigate('/wafers')} className="stat-card stat-card-gray">
-                    <div className="stat-card-title">Ukupno Plocica (Wafers)</div>
-                    <div className="stat-card-value" style={{color: '#0f294a'}}>{loading ? '...' : wafers.length}</div>
-                    <div className="stat-card-hint">Pregled plocica</div>
-                </div>
-                <div onClick={() => navigate('/wafers')} className="stat-card stat-card-green">
-                    <div className="stat-card-title">Ispravne Plocice (OK)</div>
-                    <div className="stat-card-value" style={{color: '#16a34a'}}>{loading ? '...' : okWafers}</div>
-                    <div className="stat-card-hint">Detalji</div>
-                </div>
-                <div onClick={() => navigate('/wafers')} className="stat-card stat-card-yellow">
-                    <div className="stat-card-title">Defektne Plocice</div>
-                    <div className="stat-card-value"
-                         style={{color: '#eab308'}}>{loading ? '...' : defectiveWafers}</div>
-                    <div className="stat-card-hint">Detalji</div>
-                </div>
-                <div onClick={() => navigate('/wafers')} className="stat-card stat-card-red">
-                    <div className="stat-card-title">Odbacene (Scrapped)</div>
-                    <div className="stat-card-value" style={{color: '#dc2626'}}>{loading ? '...' : scrappedWafers}</div>
-                    <div className="stat-card-hint">Detalji</div>
-                </div>
+
+                {heldLots.length > 0 && (
+                    <div className="stat-card stat-card-hold">
+                        <span className="hold-count">{lots.filter(l => l.status === 'hold').length}</span>
+                        <div>
+                            <p className="stat-card-title" style={{margin: 0, color: '#b91c1c'}}>Serije na HOLD-u</p>
+                            <p style={{fontSize: '13px', color: '#7f1d1d', margin: '6px 0 0'}}>
+                                Zaustavljene automatskom SPC kontrolom — čekaju inženjersku proveru.
+                            </p>
+                        </div>
+                        <div className="hold-lots">
+                            {lots.filter(l => l.status === 'hold').map(l => (
+                                <button key={l.id} onClick={() => navigate(`/lots/${l.id}`)}>{l.lotNumber}</button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                    <div onClick={() => navigate('/lots')} className="stat-card stat-card-blue">
+                        <div className="stat-card-title">Ukupno Serija (Lots)</div>
+                        <div className="stat-card-value"
+                             style={{color: '#0284c7'}}>{loading ? '...' : lots.length}</div>
+                        <div className="stat-card-hint">Pregled serija</div>
+                    </div>
+                    <div onClick={() => navigate('/wafers')} className="stat-card stat-card-gray">
+                        <div className="stat-card-title">Ukupno Plocica (Wafers)</div>
+                        <div className="stat-card-value"
+                             style={{color: '#0f294a'}}>{loading ? '...' : wafers.length}</div>
+                        <div className="stat-card-hint">Pregled plocica</div>
+                    </div>
+                    <div onClick={() => navigate('/wafers')} className="stat-card stat-card-green">
+                        <div className="stat-card-title">Ispravne Plocice (OK)</div>
+                        <div className="stat-card-value" style={{color: '#16a34a'}}>{loading ? '...' : okWafers}</div>
+                        <div className="stat-card-hint">Detalji</div>
+                    </div>
+                    <div onClick={() => navigate('/wafers')} className="stat-card stat-card-yellow">
+                        <div className="stat-card-title">Defektne Plocice</div>
+                        <div className="stat-card-value"
+                             style={{color: '#eab308'}}>{loading ? '...' : defectiveWafers}</div>
+                        <div className="stat-card-hint">Detalji</div>
+                    </div>
+                    <div onClick={() => navigate('/wafers')} className="stat-card stat-card-red">
+                        <div className="stat-card-title">Odbacene (Scrapped)</div>
+                        <div className="stat-card-value"
+                             style={{color: '#dc2626'}}>{loading ? '...' : scrappedWafers}</div>
+                        <div className="stat-card-hint">Detalji</div>
+                    </div>
 
             </div>
 

@@ -235,7 +235,7 @@ export default function LotDetailPage() {
             )}
 
             {/* Dva stupca: Audit Trail i Plocice */}
-            <div style={{
+            <div className="detail-grid" style={{
                 display: 'grid',
                 gridTemplateColumns: 'minmax(320px, 1fr) 2fr',
                 gap: '20px',
